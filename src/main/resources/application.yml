@@ -15,4 +15,4 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   banner:
-    location=classpath:boilerplate_banner.txt:
+    location: classpath:boilerplate_banner.txt
