@@ -3,7 +3,8 @@ package com.bola.boilerplate.controllers;
 import com.bola.boilerplate.payload.request.AuthenticationRequest;
 import com.bola.boilerplate.payload.request.RegisterRequest;
 import com.bola.boilerplate.payload.response.AuthenticationResponse;
-import com.bola.boilerplate.service.AuthenticationService;
+import com.bola.boilerplate.service.abstracts.AuthenticationManager;
+import com.bola.boilerplate.service.concretes.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final AuthenticationService service;
+    private final AuthenticationManager service;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(

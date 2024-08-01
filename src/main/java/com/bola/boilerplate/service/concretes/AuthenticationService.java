@@ -1,4 +1,4 @@
-package com.bola.boilerplate.service;
+package com.bola.boilerplate.service.concretes;
 
 import com.bola.boilerplate.models.Role;
 import com.bola.boilerplate.models.User;
@@ -8,6 +8,7 @@ import com.bola.boilerplate.payload.request.RegisterRequest;
 import com.bola.boilerplate.payload.response.AuthenticationResponse;
 import com.bola.boilerplate.repository.UserRepository;
 import com.bola.boilerplate.security.JwtService;
+import com.bola.boilerplate.service.abstracts.UserOtherDetailsManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,14 +17,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class AuthenticationService implements com.bola.boilerplate.service.abstracts.AuthenticationManager {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    private final UserOtherDetailsService userOtherDetailsService;
+    private final UserOtherDetailsManager userOtherDetailsService;
 
+    @Override
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
                 .email(request.getEmail())
@@ -47,6 +49,7 @@ public class AuthenticationService {
                 .build();
     }
 
+    @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
