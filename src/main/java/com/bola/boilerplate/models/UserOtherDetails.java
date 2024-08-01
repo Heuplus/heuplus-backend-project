@@ -29,4 +29,6 @@ public class UserOtherDetails {
     private String profilePhotoUrl;
     private Date createdAt;
     private Date updatedAt;
+    @OneToOne(mappedBy = "userOtherDetails")
+    private User user;
 }

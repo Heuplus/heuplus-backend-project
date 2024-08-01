@@ -30,6 +30,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "details_id")
+    private UserOtherDetails userOtherDetails;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
