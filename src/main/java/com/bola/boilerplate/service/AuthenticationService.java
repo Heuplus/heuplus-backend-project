@@ -2,6 +2,7 @@ package com.bola.boilerplate.service;
 
 import com.bola.boilerplate.models.Role;
 import com.bola.boilerplate.models.User;
+import com.bola.boilerplate.models.UserOtherDetails;
 import com.bola.boilerplate.payload.request.AuthenticationRequest;
 import com.bola.boilerplate.payload.request.RegisterRequest;
 import com.bola.boilerplate.payload.response.AuthenticationResponse;
@@ -31,7 +32,15 @@ public class AuthenticationService {
                 .build();
         User created = repository.save(user);
         // save details
-        userOtherDetailsService.create(request.getFirstname(), request.getLastname(), created);
+        UserOtherDetails detailsToCreate = UserOtherDetails.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .dateOfBirth(request.getDateOfBirth())
+                .gender(request.getGender())
+                .build();
+        UserOtherDetails detailsCreated = userOtherDetailsService.create(detailsToCreate);
+        created.setUserOtherDetails(detailsCreated);
+        repository.save(created);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)

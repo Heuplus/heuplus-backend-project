@@ -11,12 +11,7 @@ import org.springframework.stereotype.Service;
 public class UserOtherDetailsService {
     private final UserOtherDetailsRepository repository;
 
-    public UserOtherDetails create(String firstName, String lastName, User user) {
-        UserOtherDetails toCreate = UserOtherDetails.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .user(user)
-                .build();
-        return repository.save(toCreate);
+    public UserOtherDetails create(UserOtherDetails userOtherDetails) {
+        return repository.save(userOtherDetails);
     }
 }
