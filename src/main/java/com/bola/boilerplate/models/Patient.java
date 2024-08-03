@@ -1,5 +1,6 @@
 package com.bola.boilerplate.models;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -17,24 +17,31 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "_user_details")
-public class UserOtherDetails {
+@Table(name = "_patient")
+public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String firstName;
-    private String lastName;
-    private Date dateOfBirth;
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-    private String phoneNumber;
-    private String profilePhotoUrl;
+    @Column(columnDefinition = "json")
+    @JsonRawValue
+    private String medications;
+
+    @Column(columnDefinition = "json")
+    @JsonRawValue
+    private String medicalHistory;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
-    @OneToOne(mappedBy = "userOtherDetails")
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "insurance_information_id")
+    private InsuranceInformation insuranceInformation;
 }

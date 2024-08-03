@@ -9,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -17,24 +16,22 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "_user_details")
-public class UserOtherDetails {
+@Table(name = "_insurance_information")
+public class InsuranceInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String firstName;
-    private String lastName;
-    private Date dateOfBirth;
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-    private String phoneNumber;
-    private String profilePhotoUrl;
+    private String providerName;
+    private String policyNumber;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
     private LocalDateTime deletedAt;
-    @OneToOne(mappedBy = "userOtherDetails")
-    private User user;
+
+    @OneToOne(mappedBy = "insuranceInformation")
+    private Patient patient;
 }
