@@ -1,6 +1,5 @@
 package com.bola.boilerplate.models;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,12 +22,8 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(columnDefinition = "json")
-    @JsonRawValue
     private String medications;
 
-    @Column(columnDefinition = "json")
-    @JsonRawValue
     private String medicalHistory;
 
     @CreationTimestamp

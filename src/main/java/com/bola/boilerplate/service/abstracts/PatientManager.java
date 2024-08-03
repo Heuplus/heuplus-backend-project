@@ -1,7 +1,9 @@
 package com.bola.boilerplate.service.abstracts;
 
-import com.bola.boilerplate.models.Patient;
+import com.bola.boilerplate.models.User;
+import com.bola.boilerplate.payload.request.CreatePatientRequest;
+import com.bola.boilerplate.payload.response.CreateResponse;
 
 public interface PatientManager {
-    Patient create(Patient patient);
+    CreateResponse create(User user, CreatePatientRequest request);
 }

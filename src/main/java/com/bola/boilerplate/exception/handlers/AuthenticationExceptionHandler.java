@@ -1,4 +1,4 @@
-package com.bola.boilerplate.exception;
+package com.bola.boilerplate.exception.handlers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
