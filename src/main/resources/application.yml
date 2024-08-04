@@ -16,3 +16,7 @@ spring:
 
   banner:
     location: classpath:boilerplate_banner.txt
+
+springdoc:
+  api-docs:
+    path: /api-docs
