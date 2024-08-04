@@ -1,6 +1,5 @@
 package com.bola.boilerplate.service.concretes;
 
-import com.bola.boilerplate.models.User;
 import com.bola.boilerplate.models.UserOtherDetails;
 import com.bola.boilerplate.repository.UserOtherDetailsRepository;
 import com.bola.boilerplate.service.abstracts.UserOtherDetailsManager;
@@ -10,10 +9,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class UserOtherDetailsService implements UserOtherDetailsManager {
-    private final UserOtherDetailsRepository repository;
+  private final UserOtherDetailsRepository repository;
 
-    @Override
-    public UserOtherDetails create(UserOtherDetails userOtherDetails) {
-        return repository.save(userOtherDetails);
-    }
+  @Override
+  public UserOtherDetails create(UserOtherDetails userOtherDetails) {
+    return repository.save(userOtherDetails);
+  }
 }

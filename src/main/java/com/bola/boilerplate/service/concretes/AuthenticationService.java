@@ -17,51 +17,45 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService implements com.bola.boilerplate.service.abstracts.AuthenticationManager {
-    private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+public class AuthenticationService
+    implements com.bola.boilerplate.service.abstracts.AuthenticationManager {
+  private final UserRepository repository;
+  private final PasswordEncoder passwordEncoder;
+  private final JwtService jwtService;
+  private final AuthenticationManager authenticationManager;
 
-    private final UserOtherDetailsManager userOtherDetailsService;
+  private final UserOtherDetailsManager userOtherDetailsService;
 
-    @Override
-    public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ROLE_USER)
-                .build();
-        User created = repository.save(user);
-        // save details
-        UserOtherDetails detailsToCreate = UserOtherDetails.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .dateOfBirth(request.getDateOfBirth())
-                .gender(request.getGender())
-                .build();
-        UserOtherDetails detailsCreated = userOtherDetailsService.create(detailsToCreate);
-        created.setUserOtherDetails(detailsCreated);
-        repository.save(created);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
-    }
+  @Override
+  public AuthenticationResponse register(RegisterRequest request) {
+    var user =
+        User.builder()
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .role(Role.ROLE_USER)
+            .build();
+    User created = repository.save(user);
+    // save details
+    UserOtherDetails detailsToCreate =
+        UserOtherDetails.builder()
+            .firstName(request.getFirstName())
+            .lastName(request.getLastName())
+            .dateOfBirth(request.getDateOfBirth())
+            .gender(request.getGender())
+            .build();
+    UserOtherDetails detailsCreated = userOtherDetailsService.create(detailsToCreate);
+    created.setUserOtherDetails(detailsCreated);
+    repository.save(created);
+    var jwtToken = jwtService.generateToken(user);
+    return AuthenticationResponse.builder().token(jwtToken).build();
+  }
 
-    @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
-    }
+  @Override
+  public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+    var user = repository.findByEmail(request.getEmail()).orElseThrow();
+    var jwtToken = jwtService.generateToken(user);
+    return AuthenticationResponse.builder().token(jwtToken).build();
+  }
 }

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePatientRequest {
-    private String medications;
-    private String medicalHistory;
-    private String insuranceProviderName;
-    private String insurancePolicyNumber;
+  private String medications;
+  private String medicalHistory;
+  private String insuranceProviderName;
+  private String insurancePolicyNumber;
 }

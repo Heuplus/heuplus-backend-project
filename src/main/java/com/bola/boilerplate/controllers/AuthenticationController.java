@@ -4,7 +4,6 @@ import com.bola.boilerplate.payload.request.AuthenticationRequest;
 import com.bola.boilerplate.payload.request.RegisterRequest;
 import com.bola.boilerplate.payload.response.AuthenticationResponse;
 import com.bola.boilerplate.service.abstracts.AuthenticationManager;
-import com.bola.boilerplate.service.concretes.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final AuthenticationManager service;
+  private final AuthenticationManager service;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @Valid @RequestBody RegisterRequest request
-    ) {
-        return ResponseEntity.ok(service.register(request));
-    }
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @Valid @RequestBody AuthenticationRequest request
-    ) {
-        return ResponseEntity.ok(service.authenticate(request));
-    }
+  @PostMapping("/register")
+  public ResponseEntity<AuthenticationResponse> register(
+      @Valid @RequestBody RegisterRequest request) {
+    return ResponseEntity.ok(service.register(request));
+  }
 
+  @PostMapping("/authenticate")
+  public ResponseEntity<AuthenticationResponse> authenticate(
+      @Valid @RequestBody AuthenticationRequest request) {
+    return ResponseEntity.ok(service.authenticate(request));
+  }
 }
