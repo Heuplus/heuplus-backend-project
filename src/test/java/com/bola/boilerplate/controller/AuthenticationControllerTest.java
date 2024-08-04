@@ -1,4 +1,4 @@
-package com.bola.boilerplate.service;
+package com.bola.boilerplate.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

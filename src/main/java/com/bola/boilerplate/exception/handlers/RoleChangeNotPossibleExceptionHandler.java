@@ -14,7 +14,7 @@ public class RoleChangeNotPossibleExceptionHandler {
     @ExceptionHandler(RoleChangeNotPossibleException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(RoleChangeNotPossibleException ex) {
         HashMap<String, String> error = new HashMap<>();
-        String key = "msg";
+        String key = "message";
         error.put(key, ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
