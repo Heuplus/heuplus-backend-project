@@ -1,11 +1,14 @@
 package com.bola.boilerplate.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.bola.boilerplate.config.SpringSecurityUserProvider;
+import com.bola.boilerplate.dto.PatientDto;
 import com.bola.boilerplate.exception.exceptions.RoleChangeNotPossibleException;
+import com.bola.boilerplate.models.Gender;
 import com.bola.boilerplate.models.User;
 import com.bola.boilerplate.payload.request.CreatePatientRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
@@ -17,6 +20,7 @@ import com.bola.boilerplate.service.abstracts.UserManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +30,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.UUID;
 
 @AutoConfigureMockMvc
 @SpringBootTest(
@@ -49,6 +57,8 @@ public class PatientControllerTest {
     private JwtService jwtService;
     @Autowired
     private User user;
+
+    private PatientDto patientDto;
     private CreatePatientRequest createPatientRequest;
 
     @BeforeEach
@@ -58,6 +68,23 @@ public class PatientControllerTest {
                 .insuranceProviderName("123")
                 .medicalHistory("{\\\"tension\\\":\\\"Coraspin\\\"}")
                 .medications("{\\\"sicknesses\\\":[\\\"Hyper Tension\\\", \\\"Diabetes\\\"]}")
+                .build();
+        patientDto = PatientDto.builder()
+                .userId(UUID.randomUUID())
+                .patientId(UUID.randomUUID())
+                .email("me@here.com")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .dateOfBirth(new Date())
+                .firstName("John")
+                .lastName("Doe")
+                .phoneNumber("555 555 5555")
+                .gender(Gender.MALE)
+                .profilePhotoUrl("google.com")
+                .medications("{\\\"tension\\\":\\\"Coraspin\\\"}")
+                .medicalHistory("{\\\"sicknesses\\\":[\\\"Hyper Tension\\\", \\\"Diabetes\\\"]}")
+                .insuranceProviderName("asd")
+                .insurancePolicyNumber("123")
                 .build();
     }
 
@@ -90,5 +117,20 @@ public class PatientControllerTest {
                         .content(objectMapper.writeValueAsBytes(createPatientRequest)))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value("Role change is not possible"));
+    }
+
+    @Test
+    @WithUserDetails
+    void shouldPass() throws Exception {
+        Mockito.when(manager.details(Mockito.any(User.class))).thenReturn(patientDto);
+        mockMvc.perform(get("/api/v1/patients")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+    @Test
+    void shouldFailWithoutAuthorization() throws Exception {
+        mockMvc.perform(get("/api/v1/patients")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 }

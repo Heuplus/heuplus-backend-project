@@ -2,8 +2,8 @@ package com.bola.boilerplate.models;
 
 public enum Role {
 
-    USER,
-    ADMIN,
-    PATIENT,
-    PHYSICIAN
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_PATIENT,
+    ROLE_PHYSICIAN
 }

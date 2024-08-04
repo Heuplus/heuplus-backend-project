@@ -20,7 +20,7 @@ public class SpringSecurityUserProvider {
         return User.builder()
                 .email("username@example.com")
                 .password("password")
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .build();
     }
 
