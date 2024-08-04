@@ -36,7 +36,7 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      - name: Codelyze - Coverage
-        uses: codelyze/action@2.1.0
-        env:
-          CODELYZE_TOKEN: ${{ secrets.CODELYZE_TOKEN }}
+#      - name: Codelyze - Coverage
+#        uses: codelyze/action@2.1.0
+#        env:
+#          CODELYZE_TOKEN: ${{ secrets.CODELYZE_TOKEN }}
