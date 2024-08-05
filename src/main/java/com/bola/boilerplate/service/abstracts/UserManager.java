@@ -4,8 +4,8 @@ import com.bola.boilerplate.models.Role;
 import com.bola.boilerplate.models.User;
 
 /*
-  Implementation blueprint for UserService
- */
+ Implementation blueprint for UserService
+*/
 public interface UserManager {
   /*
    Implementation blueprint for updating a user's role
