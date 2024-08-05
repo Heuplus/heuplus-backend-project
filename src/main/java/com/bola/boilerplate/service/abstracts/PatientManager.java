@@ -8,5 +8,5 @@ import com.bola.boilerplate.payload.response.CreateResponse;
 public interface PatientManager {
   CreateResponse create(User user, CreatePatientRequest request);
 
-  PatientDto details(User user);
+  PatientDto details(String email);
 }

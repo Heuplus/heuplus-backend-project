@@ -51,9 +51,9 @@ public class PatientService implements PatientManager {
   }
 
   @Override
-  public PatientDto details(User user) {
-    Patient patient = repository.findByUser(user);
-    PatientDto dto =
+  public PatientDto details(String email) {
+    Patient patient = repository.findByUserEmail(email);
+    return
         PatientDto.builder()
             .userId(patient.getUser().getId())
             .patientId(patient.getId())
@@ -71,6 +71,5 @@ public class PatientService implements PatientManager {
             .insuranceProviderName(patient.getInsuranceInformation().getProviderName())
             .insurancePolicyNumber(patient.getInsuranceInformation().getPolicyNumber())
             .build();
-    return dto;
   }
 }

@@ -29,6 +29,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -121,7 +122,7 @@ public class PatientControllerTest {
   @Test
   @WithUserDetails
   void shouldPass() throws Exception {
-    Mockito.when(manager.details(Mockito.any(User.class))).thenReturn(patientDto);
+    Mockito.when(manager.details(Mockito.any(String.class))).thenReturn(patientDto);
     mockMvc
         .perform(get("/api/v1/patients").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
