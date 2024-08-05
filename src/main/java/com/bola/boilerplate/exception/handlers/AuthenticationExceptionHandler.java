@@ -14,7 +14,7 @@ public class AuthenticationExceptionHandler {
   public ResponseEntity<Map<String, String>> handleValidationExceptions(
       AuthenticationException ex) {
     HashMap<String, String> error = new HashMap<>();
-    String key = "msg";
+    String key = "message";
     String message = "Authentication failed for given credentials";
     error.put(key, message);
     return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);

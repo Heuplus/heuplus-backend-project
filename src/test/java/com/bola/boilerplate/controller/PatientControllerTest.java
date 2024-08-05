@@ -81,7 +81,7 @@ public class PatientControllerTest {
   @Test
   @WithUserDetails
   void shouldPassCreatePatient() throws Exception {
-    Mockito.when(manager.create(Mockito.any(User.class), Mockito.any(CreatePatientRequest.class)))
+    Mockito.when(manager.create(Mockito.any(String.class), Mockito.any(CreatePatientRequest.class)))
         .thenReturn(new CreateResponse("Patient created successfully"));
     mockMvc
         .perform(
@@ -94,7 +94,7 @@ public class PatientControllerTest {
 
   @Test
   void shouldFailWithoutAuthentication() throws Exception {
-    Mockito.when(manager.create(Mockito.any(User.class), Mockito.any(CreatePatientRequest.class)))
+    Mockito.when(manager.create(Mockito.any(String.class), Mockito.any(CreatePatientRequest.class)))
         .thenReturn(new CreateResponse("Patient created successfully"));
     mockMvc
         .perform(
@@ -107,7 +107,7 @@ public class PatientControllerTest {
   @Test
   @WithUserDetails
   void shouldFailWithRoleChangeNotPossibleException() throws Exception {
-    Mockito.when(manager.create(Mockito.any(User.class), Mockito.any(CreatePatientRequest.class)))
+    Mockito.when(manager.create(Mockito.any(String.class), Mockito.any(CreatePatientRequest.class)))
         .thenThrow(new RoleChangeNotPossibleException("Role change is not possible"));
     mockMvc
         .perform(

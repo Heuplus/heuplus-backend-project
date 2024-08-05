@@ -6,7 +6,7 @@ import com.bola.boilerplate.payload.request.CreatePatientRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
 
 public interface PatientManager {
-  CreateResponse create(User user, CreatePatientRequest request);
+  CreateResponse create(String email, CreatePatientRequest request);
 
   PatientDto details(String email);
 }

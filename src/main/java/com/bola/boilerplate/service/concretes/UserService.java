@@ -7,6 +7,8 @@ import com.bola.boilerplate.service.abstracts.UserManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserManager {
@@ -16,5 +18,10 @@ public class UserService implements UserManager {
   public User setUserRole(User user, Role role) {
     user.setRole(role);
     return repository.save(user);
+  }
+
+  @Override
+  public User findUserByEmail(String email) {
+    return repository.findByEmail(email).orElseThrow();
   }
 }

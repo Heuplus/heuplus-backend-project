@@ -37,8 +37,8 @@ public class PatientController {
         @ApiResponse(responseCode = "403", description = "Not authorized for the action")
       })
   ResponseEntity<CreateResponse> create(
-      @AuthenticationPrincipal User user, @Valid @RequestBody CreatePatientRequest request) {
-    var response = service.create(user, request);
+      @AuthenticationPrincipal UserDetails userDetails, @Valid @RequestBody CreatePatientRequest request) {
+    var response = service.create(userDetails.getUsername(), request);
     return ResponseEntity.ok(response);
   }
 

@@ -24,7 +24,8 @@ public class PatientService implements PatientManager {
   private final UserManager userManager;
 
   @Override
-  public CreateResponse create(User user, CreatePatientRequest createPatientRequest) {
+  public CreateResponse create(String email, CreatePatientRequest createPatientRequest) {
+    User user = userManager.findUserByEmail(email);
     // check if the user already has role
     if (user.getRole() != Role.ROLE_USER) {
       throw new RoleChangeNotPossibleException("Role change is not possible");
