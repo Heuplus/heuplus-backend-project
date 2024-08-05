@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*
+  PatientManager implementation for handling Patient entity related business logic
+ */
 public class PatientService implements PatientManager {
   private final PatientRepository repository;
   private final InsuranceInformationManager insuranceInformationManager;
@@ -53,7 +56,7 @@ public class PatientService implements PatientManager {
 
   @Override
   public PatientDto details(String email) {
-    Patient patient = repository.findByUserEmail(email);
+    Patient patient = repository.findByUserEmail(email).orElseThrow();
     return PatientDto.builder()
         .userId(patient.getUser().getId())
         .patientId(patient.getId())

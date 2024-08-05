@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+/*
+  InsuranceInformationManager implementation for handling InsuranceInformation entity related business logic
+ */
 public class InsuranceInformationService implements InsuranceInformationManager {
   private final InsuranceInformationRepository repository;
 

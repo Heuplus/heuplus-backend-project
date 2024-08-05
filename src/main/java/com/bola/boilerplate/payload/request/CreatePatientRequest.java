@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+/*
+  Dto for creating a new patient account requests
+ */
 public class CreatePatientRequest {
   private String medications;
   private String medicalHistory;

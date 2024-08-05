@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 /* Unit tests for {@link AuthenticationController} */
 @WebMvcTest(controllers = AuthenticationController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AuthenticationControllerTest {
+class AuthenticationControllerTest {
 
   @Autowired private MockMvc mockMvc;
 

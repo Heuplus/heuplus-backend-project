@@ -9,7 +9,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
+/*
+  Handles exceptions when a new RoleChangeNotPossible Custom Exception thrown
+ */
 public class RoleChangeNotPossibleExceptionHandler {
+  /*
+    Handles the RoleChangeNotPossibleException  by putting the error message
+    inside a ResponseEntity with 409 error code
+ */
   @ExceptionHandler(RoleChangeNotPossibleException.class)
   public ResponseEntity<Map<String, String>> handleValidationExceptions(
       RoleChangeNotPossibleException ex) {

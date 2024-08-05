@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
+/*
+  UserOtherDetailsManager implementation for handling UserOtherDetails entity related business logic
+ */
 public class UserOtherDetailsService implements UserOtherDetailsManager {
   private final UserOtherDetailsRepository repository;
 

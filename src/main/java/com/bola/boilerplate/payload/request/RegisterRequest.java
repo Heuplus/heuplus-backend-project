@@ -16,6 +16,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+/*
+  Dto for registration requests
+ */
 public class RegisterRequest {
   @NotBlank(message = "First Name field cannot be blank")
   private String firstName;

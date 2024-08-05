@@ -36,7 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @SpringBootTest(classes = SpringSecurityUserProvider.class)
 @TestPropertySource(properties = "spring.main.allow-bean-definition-overriding=true")
-public class PatientControllerTest {
+class PatientControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @MockBean private PatientManager manager;

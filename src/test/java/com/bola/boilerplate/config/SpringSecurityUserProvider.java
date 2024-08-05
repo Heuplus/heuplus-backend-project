@@ -12,10 +12,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 
+/*
+  Configuration for mocking user authentication
+ */
 @TestConfiguration
 public class SpringSecurityUserProvider {
+  /*
+    Generates a random User entity
+   */
   @Bean
-  public User testUser() {
+  User testUser() {
     return User.builder()
         .email("username@example.com")
         .password("password")
@@ -23,9 +29,12 @@ public class SpringSecurityUserProvider {
         .build();
   }
 
+  /*
+    To mock user authentication in test environment
+   */
   @Bean
   @Primary
-  public UserDetailsService userDetailsService() {
+  UserDetailsService userDetailsService() {
 
     User userDetails = testUser();
 

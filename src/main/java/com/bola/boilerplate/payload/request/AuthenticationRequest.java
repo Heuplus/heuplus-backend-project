@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+/*
+  Dto for authentication requests
+ */
 public class AuthenticationRequest {
 
   @NotBlank(message = "Email field cannot be blank")

@@ -18,9 +18,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/patients")
 @RequiredArgsConstructor
+/*
+  Presentation layer for patient related operations
+ */
 public class PatientController {
   private final PatientManager service;
 
+  /*
+    Converts a USER account to PATIENT
+   */
   @PostMapping
   @Operation(
       summary = "Converts a USER account to PATIENT",
@@ -42,6 +48,9 @@ public class PatientController {
     return ResponseEntity.ok(response);
   }
 
+  /*
+    Gets a Patient's details
+   */
   @GetMapping
   @PreAuthorize("hasRole('ROLE_PATIENT')")
   @Operation(

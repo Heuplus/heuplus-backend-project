@@ -18,10 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+/*
+  Presentation layer for authentication related operations
+ */
 public class AuthenticationController {
 
   private final AuthenticationManager service;
 
+  /*
+    Registration handler for users
+   */
   @PostMapping("/register")
   @Operation(
       summary = "Registration handler for users",
@@ -35,6 +41,9 @@ public class AuthenticationController {
       @Valid @RequestBody RegisterRequest request) {
     return ResponseEntity.ok(service.register(request));
   }
+  /*
+    Login handler for users
+   */
 
   @PostMapping("/authenticate")
   @Operation(
