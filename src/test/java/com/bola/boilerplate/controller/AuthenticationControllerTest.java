@@ -19,7 +19,6 @@ import java.time.ZoneId;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -164,14 +163,15 @@ class AuthenticationControllerTest {
 
   @Test
   void registerShouldFailWithDuplicateEmails() throws Exception {
-    Mockito.when(authenticationManager.register(Mockito.any(RegisterRequest.class))).thenThrow(new DataIntegrityViolationException("Credentials are already taken"));
+    Mockito.when(authenticationManager.register(Mockito.any(RegisterRequest.class)))
+        .thenThrow(new DataIntegrityViolationException("Credentials are already taken"));
     mockMvc
-            .perform(
-                    post("/api/v1/auth/register")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(registerRequest)))
-            .andExpect(status().isConflict())
-            .andExpect(jsonPath("$.message").value("Credentials are already taken"));
+        .perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(registerRequest)))
+        .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.message").value("Credentials are already taken"));
   }
 
   @Test
