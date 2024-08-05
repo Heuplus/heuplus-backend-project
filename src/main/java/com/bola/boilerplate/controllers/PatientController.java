@@ -1,7 +1,6 @@
 package com.bola.boilerplate.controllers;
 
 import com.bola.boilerplate.dto.PatientDto;
-import com.bola.boilerplate.models.User;
 import com.bola.boilerplate.payload.request.CreatePatientRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
 import com.bola.boilerplate.service.abstracts.PatientManager;
@@ -37,7 +36,8 @@ public class PatientController {
         @ApiResponse(responseCode = "403", description = "Not authorized for the action")
       })
   ResponseEntity<CreateResponse> create(
-      @AuthenticationPrincipal UserDetails userDetails, @Valid @RequestBody CreatePatientRequest request) {
+      @AuthenticationPrincipal UserDetails userDetails,
+      @Valid @RequestBody CreatePatientRequest request) {
     var response = service.create(userDetails.getUsername(), request);
     return ResponseEntity.ok(response);
   }
