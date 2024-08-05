@@ -19,11 +19,13 @@ import java.time.ZoneId;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -158,6 +160,18 @@ class AuthenticationControllerTest {
                 .value(
                     "Password must consists of 1 uppercase letter, 1 lowercase letter, 1 numeric"
                         + " character and at least 8 characters long"));
+  }
+
+  @Test
+  void registerShouldFailWithDuplicateEmails() throws Exception {
+    Mockito.when(authenticationManager.register(Mockito.any(RegisterRequest.class))).thenThrow(new DataIntegrityViolationException("Credentials are already taken"));
+    mockMvc
+            .perform(
+                    post("/api/v1/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsBytes(registerRequest)))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.message").value("Credentials are already taken"));
   }
 
   @Test
