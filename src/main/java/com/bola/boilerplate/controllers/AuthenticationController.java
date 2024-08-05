@@ -24,15 +24,13 @@ public class AuthenticationController {
 
   @PostMapping("/register")
   @Operation(
-          summary = "Registration handler for users",
-          description = "Upon success creates a new account with USER role"
-  )
+      summary = "Registration handler for users",
+      description = "Upon success creates a new account with USER role")
   @ApiResponses(
-          value = {
-                  @ApiResponse(responseCode = "200", description = "Successfully registered an account"),
-                  @ApiResponse(responseCode = "400", description = "Validation failed for at least one field")
-          }
-  )
+      value = {
+        @ApiResponse(responseCode = "200", description = "Successfully registered an account"),
+        @ApiResponse(responseCode = "400", description = "Validation failed for at least one field")
+      })
   public ResponseEntity<AuthenticationResponse> register(
       @Valid @RequestBody RegisterRequest request) {
     return ResponseEntity.ok(service.register(request));
@@ -40,16 +38,20 @@ public class AuthenticationController {
 
   @PostMapping("/authenticate")
   @Operation(
-          summary = "Login handler for users",
-          description = "By taking credentials authenticates the user"
-  )
+      summary = "Login handler for users",
+      description = "By taking credentials authenticates the user")
   @ApiResponses(
-          value = {
-                  @ApiResponse(responseCode = "200", description = "Authentication completed successfully and returns token"),
-                  @ApiResponse(responseCode = "400", description = "Validation failed for at least one field"),
-                  @ApiResponse(responseCode = "403", description = "Authentication failed for given crendetials")
-          }
-  )
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Authentication completed successfully and returns token"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Validation failed for at least one field"),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Authentication failed for given crendetials")
+      })
   public ResponseEntity<AuthenticationResponse> authenticate(
       @Valid @RequestBody AuthenticationRequest request) {
     return ResponseEntity.ok(service.authenticate(request));

@@ -16,8 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/patients")
 @RequiredArgsConstructor
@@ -26,14 +24,18 @@ public class PatientController {
 
   @PostMapping
   @Operation(
-          summary = "Converts a USER account to PATIENT",
-          description = "Converting an account's role from temporary USER to PATIENT with adding other details for the patient"
-  )
-  @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Converted USER account to PATIENT account successfully"),
-          @ApiResponse(responseCode = "409", description = "Role change is not possible"),
-          @ApiResponse(responseCode = "403", description = "Not authorized for the action")
-  })
+      summary = "Converts a USER account to PATIENT",
+      description =
+          "Converting an account's role from temporary USER to PATIENT with adding other details"
+              + " for the patient")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Converted USER account to PATIENT account successfully"),
+        @ApiResponse(responseCode = "409", description = "Role change is not possible"),
+        @ApiResponse(responseCode = "403", description = "Not authorized for the action")
+      })
   ResponseEntity<CreateResponse> create(
       @AuthenticationPrincipal User user, @Valid @RequestBody CreatePatientRequest request) {
     var response = service.create(user, request);
@@ -43,13 +45,15 @@ public class PatientController {
   @GetMapping
   @PreAuthorize("hasRole('ROLE_PATIENT')")
   @Operation(
-          summary = "Gets a Patient's details",
-          description = "Using the authentication context gets a patient's details"
-  )
-  @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Get the details of the Patient's successfully"),
-          @ApiResponse(responseCode = "403", description = "Unauthorized for the action")}
-  )
+      summary = "Gets a Patient's details",
+      description = "Using the authentication context gets a patient's details")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Get the details of the Patient's successfully"),
+        @ApiResponse(responseCode = "403", description = "Unauthorized for the action")
+      })
   ResponseEntity<PatientDto> details(@AuthenticationPrincipal UserDetails userDetails) {
     PatientDto patient = service.details(userDetails.getUsername());
     return ResponseEntity.ok(patient);

@@ -53,23 +53,22 @@ public class PatientService implements PatientManager {
   @Override
   public PatientDto details(String email) {
     Patient patient = repository.findByUserEmail(email);
-    return
-        PatientDto.builder()
-            .userId(patient.getUser().getId())
-            .patientId(patient.getId())
-            .email(patient.getUser().getEmail())
-            .createdAt(patient.getCreatedAt())
-            .updatedAt(patient.getUpdatedAt())
-            .dateOfBirth(patient.getUser().getUserOtherDetails().getDateOfBirth())
-            .firstName(patient.getUser().getUserOtherDetails().getFirstName())
-            .lastName(patient.getUser().getUserOtherDetails().getLastName())
-            .phoneNumber(patient.getUser().getUserOtherDetails().getPhoneNumber())
-            .gender(patient.getUser().getUserOtherDetails().getGender())
-            .profilePhotoUrl(patient.getUser().getUserOtherDetails().getProfilePhotoUrl())
-            .medications(patient.getMedications())
-            .medicalHistory(patient.getMedicalHistory())
-            .insuranceProviderName(patient.getInsuranceInformation().getProviderName())
-            .insurancePolicyNumber(patient.getInsuranceInformation().getPolicyNumber())
-            .build();
+    return PatientDto.builder()
+        .userId(patient.getUser().getId())
+        .patientId(patient.getId())
+        .email(patient.getUser().getEmail())
+        .createdAt(patient.getCreatedAt())
+        .updatedAt(patient.getUpdatedAt())
+        .dateOfBirth(patient.getUser().getUserOtherDetails().getDateOfBirth())
+        .firstName(patient.getUser().getUserOtherDetails().getFirstName())
+        .lastName(patient.getUser().getUserOtherDetails().getLastName())
+        .phoneNumber(patient.getUser().getUserOtherDetails().getPhoneNumber())
+        .gender(patient.getUser().getUserOtherDetails().getGender())
+        .profilePhotoUrl(patient.getUser().getUserOtherDetails().getProfilePhotoUrl())
+        .medications(patient.getMedications())
+        .medicalHistory(patient.getMedicalHistory())
+        .insuranceProviderName(patient.getInsuranceInformation().getProviderName())
+        .insurancePolicyNumber(patient.getInsuranceInformation().getPolicyNumber())
+        .build();
   }
 }
