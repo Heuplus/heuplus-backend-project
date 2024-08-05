@@ -11,11 +11,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.test.context.ActiveProfiles;
 
 /*
  Configuration for mocking user authentication
 */
 @TestConfiguration
+@ActiveProfiles("test")
 public class SpringSecurityUserProvider {
   /*
    Generates a random User entity

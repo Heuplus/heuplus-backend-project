@@ -27,11 +27,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 /* Unit tests for {@link AuthenticationController} */
 @WebMvcTest(controllers = AuthenticationController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles("test")
 class AuthenticationControllerTest {
 
   @Autowired private MockMvc mockMvc;
