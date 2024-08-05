@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 @Builder
 /*
-  Dto for Patient Details
- */
+ Dto for Patient Details
+*/
 public class PatientDto {
   private UUID userId;
   private UUID patientId;

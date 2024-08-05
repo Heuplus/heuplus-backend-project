@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /*
-  Handles the AuthenticationExceptions thrown by the application
- */
+ Handles the AuthenticationExceptions thrown by the application
+*/
 @ControllerAdvice
 public class AuthenticationExceptionHandler {
   /*
-    Handles the AuthenticationException  by putting the error message
-    inside a ResponseEntity with 403 error code
- */
+     Handles the AuthenticationException  by putting the error message
+     inside a ResponseEntity with 403 error code
+  */
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<Map<String, String>> handleValidationExceptions(
       AuthenticationException ex) {

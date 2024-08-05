@@ -1,19 +1,19 @@
 package com.bola.boilerplate.exception.exceptions;
 
 /*
-  Custom Exception implementation for business specific conflicts
- */
+ Custom Exception implementation for business specific conflicts
+*/
 public class RoleChangeNotPossibleException extends RuntimeException {
   /*
-    No args constructors
-   */
+   No args constructors
+  */
   public RoleChangeNotPossibleException() {
     super();
   }
 
   /*
-    Message oriented constructor
-   */
+   Message oriented constructor
+  */
   public RoleChangeNotPossibleException(String message) {
     super(message);
   }
@@ -26,8 +26,8 @@ public class RoleChangeNotPossibleException extends RuntimeException {
   }
 
   /*
-    Cause oriented constructor
-   */
+   Cause oriented constructor
+  */
   public RoleChangeNotPossibleException(Throwable cause) {
     super(cause);
   }

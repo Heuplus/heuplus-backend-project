@@ -7,10 +7,9 @@ import com.bola.boilerplate.service.abstracts.UserManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 /*
-  UserManager implementation for handling User entity related business logic
- */
+ UserManager implementation for handling User entity related business logic
+*/
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserManager {

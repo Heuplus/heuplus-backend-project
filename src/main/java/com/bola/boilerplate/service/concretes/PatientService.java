@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 /*
-  PatientManager implementation for handling Patient entity related business logic
- */
+ PatientManager implementation for handling Patient entity related business logic
+*/
 public class PatientService implements PatientManager {
   private final PatientRepository repository;
   private final InsuranceInformationManager insuranceInformationManager;

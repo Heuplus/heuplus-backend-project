@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 /*
-  AuthenticationManager implementation for handling authentication related business logic
- */
+ AuthenticationManager implementation for handling authentication related business logic
+*/
 public class AuthenticationService
     implements com.bola.boilerplate.service.abstracts.AuthenticationManager {
   private final UserRepository repository;

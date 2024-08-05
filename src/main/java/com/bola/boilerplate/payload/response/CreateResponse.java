@@ -8,8 +8,8 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 /*
-  Dto for creation responses
- */
+ Dto for creation responses
+*/
 public class CreateResponse {
   private String message;
 }

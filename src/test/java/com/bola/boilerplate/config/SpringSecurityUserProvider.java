@@ -13,13 +13,13 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 /*
-  Configuration for mocking user authentication
- */
+ Configuration for mocking user authentication
+*/
 @TestConfiguration
 public class SpringSecurityUserProvider {
   /*
-    Generates a random User entity
-   */
+   Generates a random User entity
+  */
   @Bean
   User testUser() {
     return User.builder()
@@ -30,8 +30,8 @@ public class SpringSecurityUserProvider {
   }
 
   /*
-    To mock user authentication in test environment
-   */
+   To mock user authentication in test environment
+  */
   @Bean
   @Primary
   UserDetailsService userDetailsService() {

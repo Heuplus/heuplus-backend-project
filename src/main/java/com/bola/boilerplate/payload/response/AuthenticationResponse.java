@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 /*
-  Dto for authentication responses
- */
+ Dto for authentication responses
+*/
 public class AuthenticationResponse {
 
   private String token;

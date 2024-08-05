@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 /*
-    Handles exceptions related to validation
- */
+   Handles exceptions related to validation
+*/
 public class ValidationExceptionHandler {
 
-    /*
-        Handles the MethodArgumentNotValidExceptions by putting the error messages in to a list and returning them
-        inside a ResponseEntity with 400 error code
-     */
+  /*
+     Handles the MethodArgumentNotValidExceptions by putting the error messages in to a list and returning them
+     inside a ResponseEntity with 400 error code
+  */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<Map<String, String>> handleValidationExceptions(
       MethodArgumentNotValidException ex) {

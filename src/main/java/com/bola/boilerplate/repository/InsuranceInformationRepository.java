@@ -5,6 +5,6 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /*
-    Data access layer implementation for InsuranceInformation entity
- */
+   Data access layer implementation for InsuranceInformation entity
+*/
 public interface InsuranceInformationRepository extends JpaRepository<InsuranceInformation, UUID> {}
