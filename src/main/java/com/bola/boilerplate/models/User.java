@@ -1,12 +1,16 @@
 package com.bola.boilerplate.models;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,14 +23,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "_user")
 public class User implements UserDetails {
 
-  @Id @GeneratedValue private Integer id;
-  private String firstname;
-  private String lastname;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
+
+  @Column(unique = true)
   private String email;
+
   private String password;
 
   @Enumerated(EnumType.STRING)
   private Role role;
+
+  private Boolean isActivated;
+
+  @CreationTimestamp private LocalDateTime createdAt;
+  @UpdateTimestamp private LocalDateTime updatedAt;
+  private LocalDateTime deletedAt;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "details_id")
+  private UserOtherDetails userOtherDetails;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
