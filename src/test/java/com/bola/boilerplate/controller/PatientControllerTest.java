@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
-
 import org.hibernate.exception.JDBCConnectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -129,16 +128,16 @@ class PatientControllerTest {
   @WithUserDetails
   void shouldFailWithDataAccessFailure() throws Exception {
     Mockito.when(manager.create(Mockito.any(String.class), Mockito.any(CreatePatientRequest.class)))
-            .thenThrow(JDBCConnectionException.class);
+        .thenThrow(JDBCConnectionException.class);
     mockMvc
-            .perform(
-                    post("/api/v1/patients")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(createPatientRequest)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data.error").value("Something went wrong"))
-            .andExpect(jsonPath("$.statusCode").value(500))
-            .andExpect(jsonPath("$.message").value("Something went wrong"));
+        .perform(
+            post("/api/v1/patients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(createPatientRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.error").value("Something went wrong"))
+        .andExpect(jsonPath("$.statusCode").value(500))
+        .andExpect(jsonPath("$.message").value("Something went wrong"));
   }
 
   @Test

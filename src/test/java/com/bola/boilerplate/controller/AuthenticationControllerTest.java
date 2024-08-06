@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-
 import org.hibernate.exception.JDBCConnectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -189,16 +187,16 @@ class AuthenticationControllerTest {
   @Test
   void registerShouldFailWithDataAccessFailure() throws Exception {
     Mockito.when(authenticationManager.register(Mockito.any(RegisterRequest.class)))
-            .thenThrow(JDBCConnectionException.class);
+        .thenThrow(JDBCConnectionException.class);
     mockMvc
-            .perform(
-                    post("/api/v1/auth/register")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(registerRequest)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.statusCode").value(500))
-            .andExpect(jsonPath("$.message").value("Something went wrong"))
-            .andExpect(jsonPath("$.data.error").value("Something went wrong"));
+        .perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(registerRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(500))
+        .andExpect(jsonPath("$.message").value("Something went wrong"))
+        .andExpect(jsonPath("$.data.error").value("Something went wrong"));
     ;
   }
 
