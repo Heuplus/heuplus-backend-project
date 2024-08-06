@@ -80,7 +80,7 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(registerRequest)))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.token").value("some-token"));
   }
 

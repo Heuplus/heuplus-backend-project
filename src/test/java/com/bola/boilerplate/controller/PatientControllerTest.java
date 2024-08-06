@@ -90,7 +90,7 @@ class PatientControllerTest {
             post("/api/v1/patients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createPatientRequest)))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.message").value("Patient created successfully"));
   }
 
