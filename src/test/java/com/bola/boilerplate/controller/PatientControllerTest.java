@@ -90,8 +90,9 @@ class PatientControllerTest {
             post("/api/v1/patients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createPatientRequest)))
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.message").value("Patient created successfully"));
+        .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(201))
+        .andExpect(jsonPath("$.data.message").value("Patient created successfully"));
   }
 
   @Test
@@ -103,7 +104,7 @@ class PatientControllerTest {
             post("/api/v1/patients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createPatientRequest)))
-        .andExpect(status().isForbidden());
+        .andExpect(jsonPath("$.statusCode").value(401));
   }
 
   @Test
@@ -116,7 +117,9 @@ class PatientControllerTest {
             post("/api/v1/patients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createPatientRequest)))
-        .andExpect(status().isConflict())
+        .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.error").value("Role change is not possible"))
+            .andExpect(jsonPath("$.statusCode").value(409))
         .andExpect(jsonPath("$.message").value("Role change is not possible"));
   }
 
@@ -126,13 +129,15 @@ class PatientControllerTest {
     Mockito.when(manager.details(Mockito.any(String.class))).thenReturn(patientDto);
     mockMvc
         .perform(get("/api/v1/patients").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Got the Patient's details"));
   }
 
   @Test
   void shouldFailWithoutAuthorization() throws Exception {
     mockMvc
         .perform(get("/api/v1/patients").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isForbidden());
+        .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(401));
   }
 }

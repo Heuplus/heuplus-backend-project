@@ -3,6 +3,7 @@ package com.bola.boilerplate.controllers;
 import com.bola.boilerplate.payload.request.AuthenticationRequest;
 import com.bola.boilerplate.payload.request.RegisterRequest;
 import com.bola.boilerplate.payload.response.AuthenticationResponse;
+import com.bola.boilerplate.payload.response.ResultWithData;
 import com.bola.boilerplate.service.abstracts.AuthenticationManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,9 +39,14 @@ public class AuthenticationController {
         @ApiResponse(responseCode = "200", description = "Successfully registered an account"),
         @ApiResponse(responseCode = "400", description = "Validation failed for at least one field")
       })
-  public ResponseEntity<AuthenticationResponse> register(
+  public ResponseEntity<ResultWithData<Object>> register(
       @Valid @RequestBody RegisterRequest request) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(service.register(request));
+    var result = ResultWithData.builder()
+            .data(service.register(request))
+            .message("Successfully registered an account")
+            .statusCode(HttpStatus.CREATED.value())
+            .build();
+    return ResponseEntity.ok(result);
   }
 
   /*
@@ -63,8 +69,13 @@ public class AuthenticationController {
             responseCode = "403",
             description = "Authentication failed for given crendetials")
       })
-  public ResponseEntity<AuthenticationResponse> authenticate(
+  public ResponseEntity<ResultWithData<Object>> authenticate(
       @Valid @RequestBody AuthenticationRequest request) {
-    return ResponseEntity.ok(service.authenticate(request));
+    var result = ResultWithData.builder()
+            .data(service.authenticate(request))
+            .message("Authentication completed successfully")
+            .statusCode(HttpStatus.OK.value())
+            .build();
+    return ResponseEntity.ok(result);
   }
 }

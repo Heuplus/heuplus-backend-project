@@ -2,7 +2,7 @@ package com.bola.boilerplate.controllers;
 
 import com.bola.boilerplate.dto.PatientDto;
 import com.bola.boilerplate.payload.request.CreatePatientRequest;
-import com.bola.boilerplate.payload.response.CreateResponse;
+import com.bola.boilerplate.payload.response.ResultWithData;
 import com.bola.boilerplate.service.abstracts.PatientManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -42,11 +42,16 @@ public class PatientController {
         @ApiResponse(responseCode = "409", description = "Role change is not possible"),
         @ApiResponse(responseCode = "403", description = "Not authorized for the action")
       })
-  ResponseEntity<CreateResponse> create(
+  ResponseEntity<ResultWithData<Object>> create(
       @AuthenticationPrincipal UserDetails userDetails,
       @Valid @RequestBody CreatePatientRequest request) {
     var response = service.create(userDetails.getUsername(), request);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    var result = ResultWithData.builder()
+            .data(response)
+            .message("Converted USER account to PATIENT account successfully")
+            .statusCode(HttpStatus.CREATED.value())
+            .build();
+    return ResponseEntity.ok(result);
   }
 
   /*
@@ -64,8 +69,13 @@ public class PatientController {
             description = "Get the details of the Patient's successfully"),
         @ApiResponse(responseCode = "403", description = "Unauthorized for the action")
       })
-  ResponseEntity<PatientDto> details(@AuthenticationPrincipal UserDetails userDetails) {
+  ResponseEntity<ResultWithData<Object>> details(@AuthenticationPrincipal UserDetails userDetails) {
     PatientDto patient = service.details(userDetails.getUsername());
-    return ResponseEntity.ok(patient);
+    var result = ResultWithData.builder()
+            .statusCode(HttpStatus.OK.value())
+            .message("Got the Patient's details")
+            .data(patient)
+            .build();
+    return ResponseEntity.ok(result);
   }
 }
