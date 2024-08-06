@@ -1,13 +1,11 @@
 package com.bola.boilerplate.exception.handlers;
 
+import com.bola.boilerplate.payload.response.ResultWithData;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.bola.boilerplate.payload.response.ResultWithData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -36,7 +34,8 @@ public class ValidationExceptionHandler {
               combinedMessage.append(error.getDefaultMessage()).append("\n");
             });
 
-    var result = ResultWithData.builder()
+    var result =
+        ResultWithData.builder()
             .data(errors)
             .message(combinedMessage.toString())
             .statusCode(HttpStatus.BAD_REQUEST.value())

@@ -46,7 +46,8 @@ public class PatientController {
       @AuthenticationPrincipal UserDetails userDetails,
       @Valid @RequestBody CreatePatientRequest request) {
     var response = service.create(userDetails.getUsername(), request);
-    var result = ResultWithData.builder()
+    var result =
+        ResultWithData.builder()
             .data(response)
             .message("Converted USER account to PATIENT account successfully")
             .statusCode(HttpStatus.CREATED.value())
@@ -71,7 +72,8 @@ public class PatientController {
       })
   ResponseEntity<ResultWithData<Object>> details(@AuthenticationPrincipal UserDetails userDetails) {
     PatientDto patient = service.details(userDetails.getUsername());
-    var result = ResultWithData.builder()
+    var result =
+        ResultWithData.builder()
             .statusCode(HttpStatus.OK.value())
             .message("Got the Patient's details")
             .data(patient)

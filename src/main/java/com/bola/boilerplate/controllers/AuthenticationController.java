@@ -2,7 +2,6 @@ package com.bola.boilerplate.controllers;
 
 import com.bola.boilerplate.payload.request.AuthenticationRequest;
 import com.bola.boilerplate.payload.request.RegisterRequest;
-import com.bola.boilerplate.payload.response.AuthenticationResponse;
 import com.bola.boilerplate.payload.response.ResultWithData;
 import com.bola.boilerplate.service.abstracts.AuthenticationManager;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +40,8 @@ public class AuthenticationController {
       })
   public ResponseEntity<ResultWithData<Object>> register(
       @Valid @RequestBody RegisterRequest request) {
-    var result = ResultWithData.builder()
+    var result =
+        ResultWithData.builder()
             .data(service.register(request))
             .message("Successfully registered an account")
             .statusCode(HttpStatus.CREATED.value())
@@ -71,7 +71,8 @@ public class AuthenticationController {
       })
   public ResponseEntity<ResultWithData<Object>> authenticate(
       @Valid @RequestBody AuthenticationRequest request) {
-    var result = ResultWithData.builder()
+    var result =
+        ResultWithData.builder()
             .data(service.authenticate(request))
             .message("Authentication completed successfully")
             .statusCode(HttpStatus.OK.value())

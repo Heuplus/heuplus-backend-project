@@ -1,8 +1,7 @@
 package com.bola.boilerplate.exception.handlers;
 
-import java.util.HashMap;
-
 import com.bola.boilerplate.payload.response.ResultWithData;
+import java.util.HashMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -25,7 +24,8 @@ public class AuthenticationExceptionHandler {
     String key = "error";
     String message = "Authentication failed for given credentials";
     error.put(key, message);
-    var result = ResultWithData.builder()
+    var result =
+        ResultWithData.builder()
             .data(error)
             .message(message)
             .statusCode(HttpStatus.FORBIDDEN.value())

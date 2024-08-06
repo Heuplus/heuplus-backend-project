@@ -4,12 +4,12 @@ import lombok.Builder;
 import lombok.Data;
 
 /*
-    ResultWithData is a Generic Response type for the application
- */
+   ResultWithData is a Generic Response type for the application
+*/
 @Data
 @Builder
 public class ResultWithData<T> {
-    private String message;
-    private T data;
-    private Integer statusCode;
+  private String message;
+  private T data;
+  private Integer statusCode;
 }

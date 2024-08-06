@@ -91,7 +91,7 @@ class PatientControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createPatientRequest)))
         .andExpect(status().isOk())
-            .andExpect(jsonPath("$.statusCode").value(201))
+        .andExpect(jsonPath("$.statusCode").value(201))
         .andExpect(jsonPath("$.data.message").value("Patient created successfully"));
   }
 
@@ -118,8 +118,8 @@ class PatientControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createPatientRequest)))
         .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data.error").value("Role change is not possible"))
-            .andExpect(jsonPath("$.statusCode").value(409))
+        .andExpect(jsonPath("$.data.error").value("Role change is not possible"))
+        .andExpect(jsonPath("$.statusCode").value(409))
         .andExpect(jsonPath("$.message").value("Role change is not possible"));
   }
 
@@ -130,7 +130,7 @@ class PatientControllerTest {
     mockMvc
         .perform(get("/api/v1/patients").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Got the Patient's details"));
+        .andExpect(jsonPath("$.message").value("Got the Patient's details"));
   }
 
   @Test
@@ -138,6 +138,6 @@ class PatientControllerTest {
     mockMvc
         .perform(get("/api/v1/patients").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-            .andExpect(jsonPath("$.statusCode").value(401));
+        .andExpect(jsonPath("$.statusCode").value(401));
   }
 }
