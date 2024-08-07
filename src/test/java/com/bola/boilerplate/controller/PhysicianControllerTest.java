@@ -1,8 +1,10 @@
 package com.bola.boilerplate.controller;
 
 import com.bola.boilerplate.config.SpringSecurityUserProvider;
+import com.bola.boilerplate.dto.PhysicianDto;
+import com.bola.boilerplate.dto.PhysicianSelfDto;
+import com.bola.boilerplate.exception.exceptions.NotAllowedForTheAction;
 import com.bola.boilerplate.models.User;
-import com.bola.boilerplate.payload.request.CreatePatientRequest;
 import com.bola.boilerplate.payload.request.CreatePhysicianRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
 import com.bola.boilerplate.repository.PhysicianRepository;
@@ -17,12 +19,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -89,5 +95,87 @@ public class PhysicianControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsBytes(createPhysicianRequest)))
                 .andExpect(jsonPath("$.statusCode").value(401));
+    }
+
+    @Test
+    @WithMockUser(roles = "PATIENT")
+    void shouldPassPatientDetailsForPatient() throws Exception {
+        var randomId = UUID.randomUUID();
+        Mockito.when(physicianManager.getPhysicianDetails(Mockito.any(UUID.class))).thenReturn(Mockito.any(PhysicianDto.class));
+        mockMvc
+                .perform(
+                        get("/api/v1/physicians/" + randomId)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.message").value("Got the physician's details"));
+    }
+
+    @Test
+    @WithMockUser(roles = "PHYSICIAN")
+    void shouldPassPatientDetailsForPhysician() throws Exception {
+        var randomId = UUID.randomUUID();
+        Mockito.when(physicianManager.getPhysicianDetails(Mockito.any(UUID.class))).thenReturn(Mockito.any(PhysicianDto.class));
+        mockMvc
+                .perform(
+                        get("/api/v1/physicians/" + randomId)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.message").value("Got the physician's details"));
+    }
+
+    @Test
+    @WithMockUser(roles = "PHYSICIAN")
+    void shouldPassPatientDetailsForPhysicianSelf() throws Exception {
+        Mockito.when(physicianManager.getPhysicianDetails(Mockito.any(String.class))).thenReturn(Mockito.any(PhysicianSelfDto.class));
+        mockMvc
+                .perform(
+                        get("/api/v1/physicians/")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.message").value("Got the physician's details"));
+    }
+
+    @Test
+    @WithMockUser(roles = "PATIENT")
+    void shouldFailPatientDetailsForPhysicianSelfWithPatient() throws Exception {
+        Mockito.when(physicianManager.getPhysicianDetails(Mockito.any(String.class))).thenThrow(NotAllowedForTheAction.class);
+        mockMvc
+                .perform(
+                        get("/api/v1/physicians/")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(403))
+                .andExpect(jsonPath("$.message").value("Not allowed for the action"))
+                .andExpect(jsonPath("$.data.error").value("Not allowed for the action"));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void shouldFailPatientDetailsWithUserRole() throws Exception {
+        var randomId = UUID.randomUUID();
+        mockMvc
+                .perform(
+                        get("/api/v1/physicians/" + randomId)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(403))
+                .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+                .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
+    }
+
+    @Test
+    void shouldFailPatientDetailsWithoutAuthentication() throws Exception {
+        var randomId = UUID.randomUUID();
+        mockMvc
+                .perform(
+                        get("/api/v1/physicians/" + randomId)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(401))
+                .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+                .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
     }
 }
