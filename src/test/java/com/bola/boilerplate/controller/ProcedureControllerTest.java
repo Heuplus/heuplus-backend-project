@@ -1,10 +1,13 @@
 package com.bola.boilerplate.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bola.boilerplate.config.SpringSecurityUserProvider;
+import com.bola.boilerplate.dto.PhysicianSelfDto;
+import com.bola.boilerplate.dto.ProcedureDto;
 import com.bola.boilerplate.models.User;
 import com.bola.boilerplate.payload.request.CreateProcedureRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
@@ -25,6 +28,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = SpringSecurityUserProvider.class)
@@ -137,5 +143,68 @@ class ProcedureControllerTest {
         .andExpect(jsonPath("$.statusCode").value(400))
         .andExpect(jsonPath("$.data.price").value("Price field cannot be negative"))
         .andExpect(jsonPath("$.message").value("Price field cannot be negative\n"));
+  }
+
+  @Test
+  @WithMockUser(roles = "PHYSICIAN")
+  void shouldPassDetailsWithPhysician() throws Exception {
+    var randomUUID = UUID.randomUUID();
+    Mockito.when(procedureManager.details(Mockito.any(UUID.class)))
+            .thenReturn(Mockito.any(ProcedureDto.class));
+    mockMvc
+            .perform(get("/api/v1/procedures/" + randomUUID).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(200))
+            .andExpect(jsonPath("$.message").value("Got procedure successfully"));
+  }
+
+  @Test
+  @WithMockUser(roles = "PATIENT")
+  void shouldPassDetailsWithPatient() throws Exception {
+    var randomUUID = UUID.randomUUID();
+    Mockito.when(procedureManager.details(Mockito.any(UUID.class)))
+            .thenReturn(Mockito.any(ProcedureDto.class));
+    mockMvc
+            .perform(get("/api/v1/procedures/" + randomUUID).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(200))
+            .andExpect(jsonPath("$.message").value("Got procedure successfully"));
+  }
+
+  @Test
+  @WithMockUser(roles = "USER")
+  void shouldFailDetailsWithUserRole() throws Exception {
+    var randomUUID = UUID.randomUUID();
+    mockMvc
+            .perform(get("/api/v1/procedures/" + randomUUID).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(403))
+            .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+            .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
+  }
+
+  @Test
+  void shouldFailDetailsWithoutAuthentication() throws Exception {
+    var randomUUID = UUID.randomUUID();
+    mockMvc
+            .perform(get("/api/v1/procedures/" + randomUUID).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(401))
+            .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+            .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
+  }
+
+  @Test
+  @WithMockUser(roles = "PHYSICIAN")
+  void shouldFailDetailsWithNonExistingEntity() throws Exception {
+    var randomUUID = UUID.randomUUID();
+    Mockito.when(procedureManager.details(Mockito.any(UUID.class)))
+            .thenThrow(NoSuchElementException.class);
+    mockMvc
+            .perform(get("/api/v1/procedures/" + randomUUID).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(404))
+            .andExpect(jsonPath("$.message").value("Not Found"))
+            .andExpect(jsonPath("$.data.error").value("Not Found"));
   }
 }
