@@ -23,26 +23,27 @@ import org.springframework.web.bind.annotation.RestController;
  Presentation layer for procedure related operations
 */
 public class ProcedureController {
-    private final ProcedureManager service;
-    @PostMapping
-    @PreAuthorize("hasRole('ROLE_PHYSICIAN')")
-    @Operation(
-            summary = "Creates a new procedure",
-            description =
-                    "Creating a new procedure for the authorized physician")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "Created procedure successfully"),
-                    @ApiResponse(responseCode = "403", description = "Not authorized for the action")
-            })
-    public ResponseEntity<ResultWithData<Object>> create(@RequestBody CreateProcedureRequest createProcedureRequest, @AuthenticationPrincipal UserDetails userDetails) {
-        var result = ResultWithData.builder()
-                .message("Procedure created successfully")
-                .data(service.create(userDetails.getUsername(), createProcedureRequest))
-                .statusCode(201)
-                .build();
-        return ResponseEntity.ok(result);
-    }
+  private final ProcedureManager service;
+
+  @PostMapping
+  @PreAuthorize("hasRole('ROLE_PHYSICIAN')")
+  @Operation(
+      summary = "Creates a new procedure",
+      description = "Creating a new procedure for the authorized physician")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "201", description = "Created procedure successfully"),
+        @ApiResponse(responseCode = "403", description = "Not authorized for the action")
+      })
+  public ResponseEntity<ResultWithData<Object>> create(
+      @RequestBody CreateProcedureRequest createProcedureRequest,
+      @AuthenticationPrincipal UserDetails userDetails) {
+    var result =
+        ResultWithData.builder()
+            .message("Procedure created successfully")
+            .data(service.create(userDetails.getUsername(), createProcedureRequest))
+            .statusCode(201)
+            .build();
+    return ResponseEntity.ok(result);
+  }
 }

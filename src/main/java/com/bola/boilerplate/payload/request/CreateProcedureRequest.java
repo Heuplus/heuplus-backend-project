@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProcedureRequest {
-    private String name;
-    private Double price;
+  private String name;
+  private Double price;
 }

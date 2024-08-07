@@ -18,24 +18,24 @@ import org.springframework.stereotype.Service;
  ProcedureManager implementation for handling Patient entity related business logic
 */
 public class ProcedureService implements ProcedureManager {
-    private final ProcedureRepository repository;
-    private final PhysicianManager physicianManager;
-    private final UserManager userManager;
-    /*
+  private final ProcedureRepository repository;
+  private final PhysicianManager physicianManager;
+  private final UserManager userManager;
+
+  /*
      Handle creation of a new procedure
   */
-    @Override
-    public CreateResponse create(String email, CreateProcedureRequest createProcedureRequest) {
-        User user = userManager.findUserByEmail(email);
-        Physician physician = physicianManager.getPhysicianByUser(user);
-        Procedure toCreate = Procedure.builder()
-                .price(createProcedureRequest.getPrice())
-                .name(createProcedureRequest.getName())
-                .physician(physician)
-                .build();
-        repository.save(toCreate);
-        return CreateResponse.builder()
-                .message("Procedure created successfully")
-                .build();
-    }
+  @Override
+  public CreateResponse create(String email, CreateProcedureRequest createProcedureRequest) {
+    User user = userManager.findUserByEmail(email);
+    Physician physician = physicianManager.getPhysicianByUser(user);
+    Procedure toCreate =
+        Procedure.builder()
+            .price(createProcedureRequest.getPrice())
+            .name(createProcedureRequest.getName())
+            .physician(physician)
+            .build();
+    repository.save(toCreate);
+    return CreateResponse.builder().message("Procedure created successfully").build();
+  }
 }
