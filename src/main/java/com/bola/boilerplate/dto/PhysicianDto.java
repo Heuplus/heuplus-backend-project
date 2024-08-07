@@ -1,25 +1,22 @@
 package com.bola.boilerplate.dto;
 
-import com.bola.boilerplate.models.Gender;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Date;
-import java.util.UUID;
-
 /*
-        This is the physician Dto for patients and other doctors
- */
+       This is the physician Dto for patients and other doctors
+*/
 @Data
 @Builder
 public class PhysicianDto {
-    private UUID physicianId;
-    private String qualifications;
-    private String specialization;
-    private String description;
-    private String educationRecord;
-    private String previousExperience;
-    private String profilePhotoUrl;
-    private String firstName;
-    private String lastName;
+  private UUID physicianId;
+  private String qualifications;
+  private String specialization;
+  private String description;
+  private String educationRecord;
+  private String previousExperience;
+  private String profilePhotoUrl;
+  private String firstName;
+  private String lastName;
 }

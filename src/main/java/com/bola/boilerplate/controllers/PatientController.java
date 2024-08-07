@@ -70,7 +70,8 @@ public class PatientController {
             description = "Get the details of the Patient's successfully"),
         @ApiResponse(responseCode = "403", description = "Unauthorized for the action")
       })
-  public ResponseEntity<ResultWithData<Object>> details(@AuthenticationPrincipal UserDetails userDetails) {
+  public ResponseEntity<ResultWithData<Object>> details(
+      @AuthenticationPrincipal UserDetails userDetails) {
     PatientDto patient = service.details(userDetails.getUsername());
     var result =
         ResultWithData.builder()
