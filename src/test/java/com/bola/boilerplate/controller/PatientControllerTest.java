@@ -30,6 +30,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
@@ -141,7 +142,7 @@ class PatientControllerTest {
   }
 
   @Test
-  @WithUserDetails
+  @WithMockUser(roles = "PATIENT")
   void shouldPass() throws Exception {
     Mockito.when(manager.details(Mockito.any(String.class))).thenReturn(patientDto);
     mockMvc

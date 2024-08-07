@@ -7,12 +7,12 @@ import lombok.Data;
 import java.util.Date;
 import java.util.UUID;
 
-/*
-        This is the physician Dto for patients and other doctors
- */
 @Data
 @Builder
-public class PhysicianDto {
+/*
+    PhysicianDto holds data transfer fields for Physician entity for physician's self
+ */
+public class PhysicianSelfDto {
     private UUID physicianId;
     private String qualifications;
     private String specialization;
@@ -22,4 +22,8 @@ public class PhysicianDto {
     private String profilePhotoUrl;
     private String firstName;
     private String lastName;
+    private String phoneNumber;
+    private Gender gender;
+    private String email;
+    private Date dateOfBirth;
 }

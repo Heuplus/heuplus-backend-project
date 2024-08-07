@@ -42,7 +42,7 @@ public class PatientController {
         @ApiResponse(responseCode = "409", description = "Role change is not possible"),
         @ApiResponse(responseCode = "403", description = "Not authorized for the action")
       })
-  ResponseEntity<ResultWithData<Object>> create(
+  public ResponseEntity<ResultWithData<Object>> create(
       @AuthenticationPrincipal UserDetails userDetails,
       @Valid @RequestBody CreatePatientRequest request) {
     var response = service.create(userDetails.getUsername(), request);
@@ -70,7 +70,7 @@ public class PatientController {
             description = "Get the details of the Patient's successfully"),
         @ApiResponse(responseCode = "403", description = "Unauthorized for the action")
       })
-  ResponseEntity<ResultWithData<Object>> details(@AuthenticationPrincipal UserDetails userDetails) {
+  public ResponseEntity<ResultWithData<Object>> details(@AuthenticationPrincipal UserDetails userDetails) {
     PatientDto patient = service.details(userDetails.getUsername());
     var result =
         ResultWithData.builder()

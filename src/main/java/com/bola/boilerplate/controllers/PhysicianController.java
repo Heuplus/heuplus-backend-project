@@ -9,19 +9,25 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
+/*
+ Presentation layer for physician related operations
+*/
 @RestController
 @RequestMapping("/api/v1/physicians")
 @RequiredArgsConstructor
 public class PhysicianController {
     private final PhysicianManager service;
 
+    /*
+        Converts a USER account to PHYSICIAN
+    */
     @PostMapping
     @Operation(
             summary = "Converts a USER account to PHYSICIAN",
@@ -42,6 +48,29 @@ public class PhysicianController {
                 .message("Converted USER account to PHYSICIAN account successfully")
                 .data(service.create(email, createPhysicianRequest))
                 .statusCode(HttpStatus.CREATED.value())
+                .build();
+        return ResponseEntity.ok(result);
+    }
+
+    /*
+        Gets a Physician's details
+    */
+    @GetMapping(value = {"/{physicianId}", "/"})
+    @PreAuthorize("hasAnyRole('ROLE_PATIENT', 'ROLE_PHYSICIAN')")
+    public ResponseEntity<ResultWithData<Object>> details(@PathVariable(name = "physicianId", required = false) UUID physicianId, @AuthenticationPrincipal UserDetails userDetails) {
+        if(physicianId == null) {
+            var result = ResultWithData.builder()
+                    .data(service.getPhysicianDetails(userDetails.getUsername()))
+                    .message("Got the physician's details")
+                    .statusCode(200)
+                    .build();
+            return ResponseEntity.ok(result);
+        }
+
+        var result = ResultWithData.builder()
+                .data(service.getPhysicianDetails(physicianId))
+                .message("Got the physician's details")
+                .statusCode(200)
                 .build();
         return ResponseEntity.ok(result);
     }
