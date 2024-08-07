@@ -6,6 +6,7 @@ import com.bola.boilerplate.service.abstracts.ProcedureManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProcedureController {
   private final ProcedureManager service;
 
+  /*
+      Creates a new procedure for the authorized physician
+  */
   @PostMapping
   @PreAuthorize("hasRole('ROLE_PHYSICIAN')")
   @Operation(
@@ -36,7 +40,7 @@ public class ProcedureController {
         @ApiResponse(responseCode = "403", description = "Not authorized for the action")
       })
   public ResponseEntity<ResultWithData<Object>> create(
-      @RequestBody CreateProcedureRequest createProcedureRequest,
+      @RequestBody @Valid CreateProcedureRequest createProcedureRequest,
       @AuthenticationPrincipal UserDetails userDetails) {
     var result =
         ResultWithData.builder()
