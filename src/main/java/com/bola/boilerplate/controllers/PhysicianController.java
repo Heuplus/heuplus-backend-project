@@ -8,12 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.NonNullApi;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,17 +62,18 @@ public class PhysicianController {
   @GetMapping(value = {"/{physicianId}", "/"})
   @PreAuthorize("hasAnyRole('ROLE_PATIENT', 'ROLE_PHYSICIAN')")
   @Operation(
-          summary = "Gets a Physician's details",
-          description = "Using the authentication context gets a physician's details or gets the physician from ID given" +
-                  "as path variable")
+      summary = "Gets a Physician's details",
+      description =
+          "Using the authentication context gets a physician's details or gets the physician from"
+              + " ID givenas path variable")
   @ApiResponses(
-          value = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          description = "Got the details of the Physician's successfully"),
-                  @ApiResponse(responseCode = "403", description = "Unauthorized for the action"),
-                  @ApiResponse(responseCode = "403", description = "Not allowed for the action")
-          })
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Got the details of the Physician's successfully"),
+        @ApiResponse(responseCode = "403", description = "Unauthorized for the action"),
+        @ApiResponse(responseCode = "403", description = "Not allowed for the action")
+      })
   public ResponseEntity<ResultWithData<Object>> details(
       @PathVariable(name = "physicianId", required = false) UUID physicianId,
       @AuthenticationPrincipal UserDetails userDetails) {
@@ -101,20 +100,21 @@ public class PhysicianController {
       Gets a list of physicians
   */
   @Operation(
-          summary = "Gets a list of physicians",
-          description = "Gets the list of physicians with pagination")
+      summary = "Gets a list of physicians",
+      description = "Gets the list of physicians with pagination")
   @ApiResponses(
-          value = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          description = "Got the list of the physicians successfully"),
-                  @ApiResponse(responseCode = "403", description = "Unauthorized for the action"),
-                  @ApiResponse(responseCode = "403", description = "Not allowed for the action")
-          })
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Got the list of the physicians successfully"),
+        @ApiResponse(responseCode = "403", description = "Unauthorized for the action"),
+        @ApiResponse(responseCode = "403", description = "Not allowed for the action")
+      })
   @GetMapping
   @PreAuthorize("hasAnyRole('ROLE_PATIENT', 'ROLE_PHYSICIAN')")
   public ResponseEntity<ResultWithData<Object>> list(@NonNull final Pageable pageable) {
-    var result = ResultWithData.builder()
+    var result =
+        ResultWithData.builder()
             .message("Successfully listed the physicians")
             .data(service.listPhysicians(pageable))
             .statusCode(200)

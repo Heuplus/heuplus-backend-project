@@ -13,10 +13,7 @@ import com.bola.boilerplate.repository.PhysicianRepository;
 import com.bola.boilerplate.service.abstracts.PhysicianManager;
 import com.bola.boilerplate.service.abstracts.UserManager;
 import java.util.UUID;
-import java.util.function.Function;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -107,16 +104,20 @@ public class PhysicianService implements PhysicianManager {
   */
   @Override
   public Page<PhysicianDto> listPhysicians(Pageable pageable) {
-    return repository.findAll(pageable).map(entity -> PhysicianDto.builder()
-            .physicianId(entity.getId())
-            .specialization(entity.getSpecialization())
-            .profilePhotoUrl(entity.getUser().getUserOtherDetails().getProfilePhotoUrl())
-            .educationRecord(entity.getEducationRecord())
-            .previousExperience(entity.getPreviousExperience())
-            .qualifications(entity.getQualifications())
-            .description(entity.getDescription())
-            .firstName(entity.getUser().getUserOtherDetails().getFirstName())
-            .lastName(entity.getUser().getUserOtherDetails().getLastName())
-            .build());
+    return repository
+        .findAll(pageable)
+        .map(
+            entity ->
+                PhysicianDto.builder()
+                    .physicianId(entity.getId())
+                    .specialization(entity.getSpecialization())
+                    .profilePhotoUrl(entity.getUser().getUserOtherDetails().getProfilePhotoUrl())
+                    .educationRecord(entity.getEducationRecord())
+                    .previousExperience(entity.getPreviousExperience())
+                    .qualifications(entity.getQualifications())
+                    .description(entity.getDescription())
+                    .firstName(entity.getUser().getUserOtherDetails().getFirstName())
+                    .lastName(entity.getUser().getUserOtherDetails().getLastName())
+                    .build());
   }
 }
