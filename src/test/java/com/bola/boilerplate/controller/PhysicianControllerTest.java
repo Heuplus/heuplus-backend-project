@@ -16,6 +16,7 @@ import com.bola.boilerplate.repository.PhysicianRepository;
 import com.bola.boilerplate.service.abstracts.PhysicianManager;
 import com.bola.boilerplate.service.abstracts.UserManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -168,5 +171,50 @@ class PhysicianControllerTest {
         .andExpect(jsonPath("$.statusCode").value(401))
         .andExpect(jsonPath("$.message").value("Not authorized for the action"))
         .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
+  }
+
+  @Test
+  @WithMockUser(roles = "PHYSICIAN")
+  void shouldPassListPhysiciansWithPhysicianAccount() throws Exception {
+    Mockito.when(physicianManager.listPhysicians(Mockito.any(Pageable.class)))
+            .thenReturn(Mockito.any(Page.class));
+    mockMvc
+            .perform(get("/api/v1/physicians?page=0&size=5").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(200))
+            .andExpect(jsonPath("$.message").value("Successfully listed the physicians"));
+  }
+
+  @Test
+  @WithMockUser(roles = "PATIENT")
+  void shouldPassListPhysiciansWithPatientAccount() throws Exception {
+    Mockito.when(physicianManager.listPhysicians(Mockito.any(Pageable.class)))
+            .thenReturn(Mockito.any(Page.class));
+    mockMvc
+            .perform(get("/api/v1/physicians?page=0&size=5").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(200))
+            .andExpect(jsonPath("$.message").value("Successfully listed the physicians"));
+  }
+
+  @Test
+  @WithMockUser(roles = "USER")
+  void shouldFailListPhysiciansWithUserAccount() throws Exception {
+    mockMvc
+            .perform(get("/api/v1/physicians?page=0&size=5").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(403))
+            .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+            .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
+  }
+
+  @Test
+  void shouldFailListPhysiciansWithoutAuthentication() throws Exception {
+    mockMvc
+            .perform(get("/api/v1/physicians?page=0&size=5").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(401))
+            .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+            .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
   }
 }

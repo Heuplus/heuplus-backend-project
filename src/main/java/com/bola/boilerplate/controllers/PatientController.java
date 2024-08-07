@@ -67,7 +67,7 @@ public class PatientController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Get the details of the Patient's successfully"),
+            description = "Got the details of the Patient's successfully"),
         @ApiResponse(responseCode = "403", description = "Unauthorized for the action")
       })
   public ResponseEntity<ResultWithData<Object>> details(

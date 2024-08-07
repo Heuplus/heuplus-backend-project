@@ -4,6 +4,9 @@ import com.bola.boilerplate.dto.PhysicianDto;
 import com.bola.boilerplate.dto.PhysicianSelfDto;
 import com.bola.boilerplate.payload.request.CreatePhysicianRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.UUID;
 
 /*
@@ -16,13 +19,18 @@ public interface PhysicianManager {
   CreateResponse create(String email, CreatePhysicianRequest createPhysicianRequest);
 
   /*
-   Implementation blueprint for getting a patient's details from database with ID
+   Implementation blueprint for getting a physician's details from database with ID
   */
   PhysicianDto getPhysicianDetails(UUID id);
 
   /*
-   Implementation blueprint for getting a patient's details from database with email address
+   Implementation blueprint for getting a physician's details from database with email address
   */
 
   PhysicianSelfDto getPhysicianDetails(String email);
+
+  /*
+   Implementation blueprint for getting a list of physicians
+  */
+  Page<PhysicianDto> listPhysicians(Pageable pageable);
 }
