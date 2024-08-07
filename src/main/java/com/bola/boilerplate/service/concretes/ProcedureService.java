@@ -1,5 +1,6 @@
 package com.bola.boilerplate.service.concretes;
 
+import com.bola.boilerplate.dto.ProcedureDto;
 import com.bola.boilerplate.models.Physician;
 import com.bola.boilerplate.models.Procedure;
 import com.bola.boilerplate.models.User;
@@ -11,6 +12,8 @@ import com.bola.boilerplate.service.abstracts.ProcedureManager;
 import com.bola.boilerplate.service.abstracts.UserManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +40,13 @@ public class ProcedureService implements ProcedureManager {
             .build();
     repository.save(toCreate);
     return CreateResponse.builder().message("Procedure created successfully").build();
+  }
+
+  /*
+     Handle getting a procedure from database
+  */
+  @Override
+  public ProcedureDto details(UUID id) {
+    return repository.findByIdWithoutUser(id).orElseThrow();
   }
 }

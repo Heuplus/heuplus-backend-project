@@ -12,10 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/procedures")
@@ -48,6 +47,29 @@ public class ProcedureController {
             .data(service.create(userDetails.getUsername(), createProcedureRequest))
             .statusCode(201)
             .build();
+    return ResponseEntity.ok(result);
+  }
+
+  /*
+    Gets a procedure from database with its details
+   */
+  @GetMapping("/{procedureId}")
+  @PreAuthorize("hasAnyRole('ROLE_PHYSICIAN', 'ROLE_PATIENT')")
+  @Operation(
+          summary = "Getting a procedure",
+          description = "Getting a procedure with it's details")
+  @ApiResponses(
+          value = {
+                  @ApiResponse(responseCode = "201", description = "Got procedure successfully"),
+                  @ApiResponse(responseCode = "403", description = "Not authorized for the action")
+          })
+  public ResponseEntity<ResultWithData<Object>> details(@PathVariable UUID procedureId) {
+    var result =
+            ResultWithData.builder()
+                    .message("Got procedure successfully")
+                    .data(service.details(procedureId))
+                    .statusCode(200)
+                    .build();
     return ResponseEntity.ok(result);
   }
 }

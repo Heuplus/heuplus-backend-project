@@ -1,7 +1,11 @@
 package com.bola.boilerplate.service.abstracts;
 
+import com.bola.boilerplate.dto.ProcedureDto;
+import com.bola.boilerplate.models.Procedure;
 import com.bola.boilerplate.payload.request.CreateProcedureRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
+
+import java.util.UUID;
 
 /*
  Implementation blueprint for ProcedureService
@@ -11,4 +15,10 @@ public interface ProcedureManager {
    Implementation blueprint for creating a new Procedure in database
   */
   CreateResponse create(String email, CreateProcedureRequest createProcedureRequest);
+
+  /*
+   Implementation blueprint for getting a Procedure by ID
+  */
+
+  ProcedureDto details(UUID id);
 }
