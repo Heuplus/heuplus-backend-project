@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
     Dto for creating a new procedure account requests
 */
 public class CreateProcedureRequest {
-  @NotBlank
-  private String name;
-  @NotBlank
-  private Double price;
+  @NotBlank private String name;
+  @NotBlank private Double price;
 }
