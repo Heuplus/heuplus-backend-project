@@ -7,14 +7,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/procedures")
@@ -51,25 +50,23 @@ public class ProcedureController {
   }
 
   /*
-    Gets a procedure from database with its details
-   */
+   Gets a procedure from database with its details
+  */
   @GetMapping("/{procedureId}")
   @PreAuthorize("hasAnyRole('ROLE_PHYSICIAN', 'ROLE_PATIENT')")
-  @Operation(
-          summary = "Getting a procedure",
-          description = "Getting a procedure with it's details")
+  @Operation(summary = "Getting a procedure", description = "Getting a procedure with it's details")
   @ApiResponses(
-          value = {
-                  @ApiResponse(responseCode = "201", description = "Got procedure successfully"),
-                  @ApiResponse(responseCode = "403", description = "Not authorized for the action")
-          })
+      value = {
+        @ApiResponse(responseCode = "201", description = "Got procedure successfully"),
+        @ApiResponse(responseCode = "403", description = "Not authorized for the action")
+      })
   public ResponseEntity<ResultWithData<Object>> details(@PathVariable UUID procedureId) {
     var result =
-            ResultWithData.builder()
-                    .message("Got procedure successfully")
-                    .data(service.details(procedureId))
-                    .statusCode(200)
-                    .build();
+        ResultWithData.builder()
+            .message("Got procedure successfully")
+            .data(service.details(procedureId))
+            .statusCode(200)
+            .build();
     return ResponseEntity.ok(result);
   }
 }
