@@ -57,7 +57,7 @@ public class PhysicianControllerTest {
     void setUp() {
         createPhysicianRequest = CreatePhysicianRequest.builder()
                 .description("World known Aesthetics Surgeon with more than 7 years of experience")
-                .educationRecord("{\"\": \"\"}")
+                .educationRecord("{\"Cukurova University\": \"Med School\"}")
                 .previousExperience("{\"Acı Badem Hospital\": \"4 years\", \"Medipol Hospital\" : \"3 years\"}")
                 .specialization("Aesthetics")
                 .qualifications("Nose Aesthetics, Plastic Surgery")

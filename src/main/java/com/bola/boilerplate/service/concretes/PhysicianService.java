@@ -1,5 +1,9 @@
 package com.bola.boilerplate.service.concretes;
 
+import com.bola.boilerplate.exception.exceptions.RoleChangeNotPossibleException;
+import com.bola.boilerplate.models.Physician;
+import com.bola.boilerplate.models.Role;
+import com.bola.boilerplate.models.User;
 import com.bola.boilerplate.payload.request.CreatePhysicianRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
 import com.bola.boilerplate.repository.PhysicianRepository;
@@ -22,6 +26,21 @@ public class PhysicianService implements PhysicianManager {
      */
     @Override
     public CreateResponse create(String email, CreatePhysicianRequest createPhysicianRequest) {
-        return null;
+        User user = userManager.findUserByEmail(email);
+        if(user.getRole() != Role.ROLE_USER) {
+            throw new RoleChangeNotPossibleException();
+        }
+
+        User updateUser = userManager.setUserRole(user, Role.ROLE_PHYSICIAN);
+        Physician physician = Physician.builder()
+                .user(updateUser)
+                .description(createPhysicianRequest.getDescription())
+                .qualifications(createPhysicianRequest.getQualifications())
+                .educationRecord(createPhysicianRequest.getEducationRecord())
+                .previousExperience(createPhysicianRequest.getPreviousExperience())
+                .specialization(createPhysicianRequest.getSpecialization())
+                .build();
+        repository.save(physician);
+        return new CreateResponse("Physician created successfully");
     }
 }
