@@ -1,10 +1,8 @@
 package com.bola.boilerplate.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 import com.bola.boilerplate.config.SpringSecurityUserProvider;
 import com.bola.boilerplate.models.User;
@@ -36,117 +34,108 @@ import org.springframework.test.web.servlet.MockMvc;
    Testing for ProcedureController
 */
 class ProcedureControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private ProcedureManager procedureManager;
-    @MockBean
-    private ProcedureRepository procedureRepository;
-    @MockBean
-    private UserManager userManager;
-    @MockBean
-    private PhysicianManager physicianManager;
-    @Autowired
-    private User user;
+  @Autowired private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
+  @MockBean private ProcedureManager procedureManager;
+  @MockBean private ProcedureRepository procedureRepository;
+  @MockBean private UserManager userManager;
+  @MockBean private PhysicianManager physicianManager;
+  @Autowired private User user;
 
-    private CreateProcedureRequest createProcedureRequest;
+  private CreateProcedureRequest createProcedureRequest;
 
-    @BeforeEach
-    void setUp() {
-        createProcedureRequest = CreateProcedureRequest.builder()
-                .name("Plastic Surgery")
-                .price(500.00)
-                .build();
-    }
+  @BeforeEach
+  void setUp() {
+    createProcedureRequest =
+        CreateProcedureRequest.builder().name("Plastic Surgery").price(500.00).build();
+  }
 
-    @Test
-    @WithMockUser(roles = "PHYSICIAN")
-    void shouldPassCreateProcedure() throws Exception {
-        Mockito.when(
-                        procedureManager.create(
-                                Mockito.any(String.class), Mockito.any(CreateProcedureRequest.class)))
-                .thenReturn(new CreateResponse("Procedure created successfully"));
-        mockMvc
-                .perform(
-                        post("/api/v1/procedures")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(201))
-                .andExpect(jsonPath("$.data.message").value("Procedure created successfully"))
-                .andExpect(jsonPath("$.message").value("Procedure created successfully"));
-    }
+  @Test
+  @WithMockUser(roles = "PHYSICIAN")
+  void shouldPassCreateProcedure() throws Exception {
+    Mockito.when(
+            procedureManager.create(
+                Mockito.any(String.class), Mockito.any(CreateProcedureRequest.class)))
+        .thenReturn(new CreateResponse("Procedure created successfully"));
+    mockMvc
+        .perform(
+            post("/api/v1/procedures")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(201))
+        .andExpect(jsonPath("$.data.message").value("Procedure created successfully"))
+        .andExpect(jsonPath("$.message").value("Procedure created successfully"));
+  }
 
-    @Test
-    @WithMockUser(roles = "PATIENT")
-    void shouldFailCreateProcedureForPatient() throws Exception {
-        mockMvc
-                .perform(
-                        post("/api/v1/procedures")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(403))
-                .andExpect(jsonPath("$.data.error").value("Not authorized for the action"))
-                .andExpect(jsonPath("$.message").value("Not authorized for the action"));
-    }
+  @Test
+  @WithMockUser(roles = "PATIENT")
+  void shouldFailCreateProcedureForPatient() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/procedures")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(403))
+        .andExpect(jsonPath("$.data.error").value("Not authorized for the action"))
+        .andExpect(jsonPath("$.message").value("Not authorized for the action"));
+  }
 
-    @Test
-    @WithMockUser(roles = "USER")
-    void shouldFailCreateProcedureForUser() throws Exception {
-        mockMvc
-                .perform(
-                        post("/api/v1/procedures")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(403))
-                .andExpect(jsonPath("$.data.error").value("Not authorized for the action"))
-                .andExpect(jsonPath("$.message").value("Not authorized for the action"));
-    }
+  @Test
+  @WithMockUser(roles = "USER")
+  void shouldFailCreateProcedureForUser() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/procedures")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(403))
+        .andExpect(jsonPath("$.data.error").value("Not authorized for the action"))
+        .andExpect(jsonPath("$.message").value("Not authorized for the action"));
+  }
 
-    @Test
-    void shouldFailCreateProcedureWithoutAuthentication() throws Exception {
-        mockMvc
-                .perform(
-                        post("/api/v1/procedures")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(401))
-                .andExpect(jsonPath("$.data.error").value("Not authorized for the action"))
-                .andExpect(jsonPath("$.message").value("Not authorized for the action"));
-    }
+  @Test
+  void shouldFailCreateProcedureWithoutAuthentication() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/procedures")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(401))
+        .andExpect(jsonPath("$.data.error").value("Not authorized for the action"))
+        .andExpect(jsonPath("$.message").value("Not authorized for the action"));
+  }
 
-    @Test
-    @WithMockUser(roles = "PHYSICIAN")
-    void shouldFailCreateProcedureMissingName() throws Exception {
-        createProcedureRequest.setName(null);
-        mockMvc
-                .perform(
-                        post("/api/v1/procedures")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(400))
-                .andExpect(jsonPath("$.data.name").value("Name field cannot be blank"))
-                .andExpect(jsonPath("$.message").value("Name field cannot be blank\n"));
-    }
+  @Test
+  @WithMockUser(roles = "PHYSICIAN")
+  void shouldFailCreateProcedureMissingName() throws Exception {
+    createProcedureRequest.setName(null);
+    mockMvc
+        .perform(
+            post("/api/v1/procedures")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(400))
+        .andExpect(jsonPath("$.data.name").value("Name field cannot be blank"))
+        .andExpect(jsonPath("$.message").value("Name field cannot be blank\n"));
+  }
 
-    @Test
-    @WithMockUser(roles = "PHYSICIAN")
-    void shouldFailCreateProcedureNegativePrice() throws Exception {
-        createProcedureRequest.setPrice(-500.00);
-        mockMvc
-                .perform(
-                        post("/api/v1/procedures")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(400))
-                .andExpect(jsonPath("$.data.price").value("Price field cannot be negative"))
-                .andExpect(jsonPath("$.message").value("Price field cannot be negative\n"));
-    }
+  @Test
+  @WithMockUser(roles = "PHYSICIAN")
+  void shouldFailCreateProcedureNegativePrice() throws Exception {
+    createProcedureRequest.setPrice(-500.00);
+    mockMvc
+        .perform(
+            post("/api/v1/procedures")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(createProcedureRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(400))
+        .andExpect(jsonPath("$.data.price").value("Price field cannot be negative"))
+        .andExpect(jsonPath("$.message").value("Price field cannot be negative\n"));
+  }
 }

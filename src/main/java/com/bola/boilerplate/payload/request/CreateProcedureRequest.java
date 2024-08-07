@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class CreateProcedureRequest {
   @NotBlank(message = "Name field cannot be blank")
   private String name;
+
   @Positive(message = "Price field cannot be negative")
   private Double price;
 }
