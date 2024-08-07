@@ -2,6 +2,7 @@ package com.bola.boilerplate.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,4 +37,7 @@ public class Physician {
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id")
   private User user;
+
+  @OneToMany(cascade = CascadeType.ALL, targetEntity = Procedure.class, fetch = FetchType.LAZY)
+  private List<Procedure> procedures;
 }

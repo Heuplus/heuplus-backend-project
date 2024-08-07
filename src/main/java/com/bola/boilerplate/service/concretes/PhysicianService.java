@@ -120,4 +120,12 @@ public class PhysicianService implements PhysicianManager {
                     .lastName(entity.getUser().getUserOtherDetails().getLastName())
                     .build());
   }
+
+  /*
+     Gets the physician by User
+  */
+  @Override
+  public Physician getPhysicianByUser(User user) {
+    return repository.findByUser(user).orElseThrow();
+  }
 }
