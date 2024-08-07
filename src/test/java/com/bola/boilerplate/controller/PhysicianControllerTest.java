@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.bola.boilerplate.config.SpringSecurityUserProvider;
 import com.bola.boilerplate.dto.PhysicianDto;
 import com.bola.boilerplate.dto.PhysicianSelfDto;
-import com.bola.boilerplate.exception.exceptions.NotAllowedForTheAction;
+import com.bola.boilerplate.exception.exceptions.NotAllowedForTheActionException;
 import com.bola.boilerplate.models.User;
 import com.bola.boilerplate.payload.request.CreatePhysicianRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
@@ -38,7 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 /*
    Testing for PhysicianController
 */
-public class PhysicianControllerTest {
+class PhysicianControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
@@ -138,7 +138,7 @@ public class PhysicianControllerTest {
   @WithMockUser(roles = "PATIENT")
   void shouldFailPatientDetailsForPhysicianSelfWithPatient() throws Exception {
     Mockito.when(physicianManager.getPhysicianDetails(Mockito.any(String.class)))
-        .thenThrow(NotAllowedForTheAction.class);
+        .thenThrow(NotAllowedForTheActionException.class);
     mockMvc
         .perform(get("/api/v1/physicians/").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())

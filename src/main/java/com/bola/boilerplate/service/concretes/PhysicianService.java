@@ -2,7 +2,7 @@ package com.bola.boilerplate.service.concretes;
 
 import com.bola.boilerplate.dto.PhysicianDto;
 import com.bola.boilerplate.dto.PhysicianSelfDto;
-import com.bola.boilerplate.exception.exceptions.NotAllowedForTheAction;
+import com.bola.boilerplate.exception.exceptions.NotAllowedForTheActionException;
 import com.bola.boilerplate.exception.exceptions.RoleChangeNotPossibleException;
 import com.bola.boilerplate.models.Physician;
 import com.bola.boilerplate.models.Role;
@@ -77,7 +77,7 @@ public class PhysicianService implements PhysicianManager {
     System.out.println("Got into self details with email" + user.getUsername());
     if (user.getRole() != Role.ROLE_PHYSICIAN) {
       System.out.println("Role is not physician");
-      throw new NotAllowedForTheAction();
+      throw new NotAllowedForTheActionException();
     }
     var physician = repository.findByUser(user).orElseThrow();
     return PhysicianSelfDto.builder()
