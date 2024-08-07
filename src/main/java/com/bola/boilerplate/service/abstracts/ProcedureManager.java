@@ -3,6 +3,9 @@ package com.bola.boilerplate.service.abstracts;
 import com.bola.boilerplate.dto.ProcedureDto;
 import com.bola.boilerplate.payload.request.CreateProcedureRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.UUID;
 
 /*
@@ -19,4 +22,9 @@ public interface ProcedureManager {
   */
 
   ProcedureDto details(UUID id);
+
+  /*
+   Implementation blueprint for getting a Physician's procedures
+  */
+  Page<ProcedureDto> getPhysiciansProcedures(UUID physicianId, Pageable pageable);
 }

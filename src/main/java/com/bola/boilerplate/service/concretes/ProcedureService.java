@@ -12,7 +12,10 @@ import com.bola.boilerplate.service.abstracts.ProcedureManager;
 import com.bola.boilerplate.service.abstracts.UserManager;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +50,22 @@ public class ProcedureService implements ProcedureManager {
   @Override
   public ProcedureDto details(UUID id) {
     return repository.findByIdWithoutUser(id).orElseThrow();
+  }
+
+  /*
+     Handle listing a physician's procedures from database
+  */
+  @Override
+  public Page<ProcedureDto> getPhysiciansProcedures(UUID physicianId, Pageable pageable) {
+    if(physicianId == null) {
+      return null;
+    }
+    return repository.findProceduresByPhysicianId(physicianId, pageable).map(procedure -> ProcedureDto.builder()
+            .procedureId(procedure.getId())
+            .createdAt(procedure.getCreatedAt())
+            .name(procedure.getName())
+            .price(procedure.getPrice())
+            .updatedAt(procedure.getUpdatedAt())
+            .build());
   }
 }

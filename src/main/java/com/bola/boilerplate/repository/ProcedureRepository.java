@@ -2,8 +2,12 @@ package com.bola.boilerplate.repository;
 
 import com.bola.boilerplate.dto.ProcedureDto;
 import com.bola.boilerplate.models.Procedure;
+
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +23,8 @@ public interface ProcedureRepository extends JpaRepository<Procedure, UUID> {
       "SELECT new com.bola.boilerplate.dto.ProcedureDto(id, name, price, createdAt, updatedAt) FROM"
           + " Procedure WHERE id = :id")
   Optional<ProcedureDto> findByIdWithoutUser(@Param("id") UUID id);
+  /*
+   Implementation blueprint for getting a Physician's procedures
+  */
+  Page<Procedure> findProceduresByPhysicianId(UUID physicianId, Pageable pageable);
 }

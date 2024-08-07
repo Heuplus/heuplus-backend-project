@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -57,7 +58,7 @@ public class ProcedureController {
   @Operation(summary = "Getting a procedure", description = "Getting a procedure with it's details")
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = "201", description = "Got procedure successfully"),
+        @ApiResponse(responseCode = "200", description = "Got procedure successfully"),
         @ApiResponse(responseCode = "403", description = "Not authorized for the action")
       })
   public ResponseEntity<ResultWithData<Object>> details(@PathVariable UUID procedureId) {
@@ -67,6 +68,26 @@ public class ProcedureController {
             .data(service.details(procedureId))
             .statusCode(200)
             .build();
+    return ResponseEntity.ok(result);
+  }
+  /*
+    Gets procedures of a physician
+  */
+  @GetMapping
+  @PreAuthorize("hasAnyRole('ROLE_PHYSICIAN', 'ROLE_PATIENT')")
+  @Operation(summary = "Listing procedures of a physician", description = "Listing procedures of a physician")
+  @ApiResponses(
+          value = {
+                  @ApiResponse(responseCode = "200", description = "Got procedures successfully"),
+                  @ApiResponse(responseCode = "403", description = "Not authorized for the action")
+          })
+  public ResponseEntity<ResultWithData<Object>> list(@RequestParam UUID physicianId, Pageable pageable) {
+    var result =
+            ResultWithData.builder()
+                    .message("Got procedures successfully")
+                    .data(service.getPhysiciansProcedures(physicianId, pageable))
+                    .statusCode(200)
+                    .build();
     return ResponseEntity.ok(result);
   }
 }
