@@ -9,8 +9,8 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to encrypt and decrypt the data.
- * The encryption algorithm used is AES-256 with GCM mode.
+ * This class is used to encrypt and decrypt the data. The encryption algorithm used is AES-256 with
+ * GCM mode.
  */
 @Component
 public class EncryptionUtil {
