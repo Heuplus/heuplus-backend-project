@@ -27,8 +27,8 @@ public class SettingController {
   private final SettingManager service;
 
   /*
-    Creates a new setting for the authorized physician or patient
-   */
+   Creates a new setting for the authorized physician or patient
+  */
   @PostMapping
   @PreAuthorize("hasAnyRole('ROLE_PHYSICIAN', 'ROLE_PATIENT')")
   @Operation(
