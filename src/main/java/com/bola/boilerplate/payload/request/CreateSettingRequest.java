@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+/*
+    Dto for creating a new setting requests
+*/
 public class CreateSettingRequest {
   @NotBlank private String key;
   @NotBlank private String value;
