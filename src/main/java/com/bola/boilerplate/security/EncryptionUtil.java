@@ -8,6 +8,10 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is used to encrypt and decrypt the data.
+ * The encryption algorithm used is AES-256 with GCM mode.
+ */
 @Component
 public class EncryptionUtil {
   // This is a secret key that should be stored in a secure location
