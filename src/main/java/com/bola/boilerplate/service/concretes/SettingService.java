@@ -16,22 +16,22 @@ import org.springframework.stereotype.Service;
  SettingManager implementation for handling Setting entity related business logic
 */
 public class SettingService implements SettingManager {
-    private final SettingRepository repository;
-    private final UserManager userManager;
-    /*
+  private final SettingRepository repository;
+  private final UserManager userManager;
+
+  /*
      Handle creation of a new setting
   */
-    @Override
-    public CreateResponse create(String email, CreateSettingRequest createSettingRequest) {
-        User user = userManager.findUserByEmail(email);
-        Setting toCreate = Setting.builder()
-                .key(createSettingRequest.getKey())
-                .value(createSettingRequest.getValue())
-                .user(user)
-                .build();
-        repository.save(toCreate);
-        return CreateResponse.builder()
-                .message("Setting created successfully")
-                .build();
-    }
+  @Override
+  public CreateResponse create(String email, CreateSettingRequest createSettingRequest) {
+    User user = userManager.findUserByEmail(email);
+    Setting toCreate =
+        Setting.builder()
+            .key(createSettingRequest.getKey())
+            .value(createSettingRequest.getValue())
+            .user(user)
+            .build();
+    repository.save(toCreate);
+    return CreateResponse.builder().message("Setting created successfully").build();
+  }
 }

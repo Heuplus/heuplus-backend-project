@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateSettingRequest {
-    @NotBlank
-    private String key;
-    @NotBlank
-    private String value;
+  @NotBlank private String key;
+  @NotBlank private String value;
 }

@@ -24,27 +24,27 @@ import org.springframework.web.bind.annotation.RestController;
  Presentation layer for setting related operations
 */
 public class SettingController {
-    private final SettingManager service;
+  private final SettingManager service;
 
-    @PostMapping
-    @PreAuthorize("hasAnyRole('ROLE_PHYSICIAN', 'ROLE_PATIENT')")
-    @Operation(
-            summary = "Creates a new setting",
-            description = "Creating a new setting for the authorized physician or patient")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "201", description = "Created setting successfully"),
-                    @ApiResponse(responseCode = "403", description = "Not authorized for the action")
-            })
-    public ResponseEntity<ResultWithData<Object>> create(
-            @RequestBody @Valid CreateSettingRequest createSettingRequest,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        var result =
-                ResultWithData.builder()
-                        .message("Setting created successfully")
-                        .data(service.create(userDetails.getUsername(), createSettingRequest))
-                        .statusCode(201)
-                        .build();
-        return ResponseEntity.ok(result);
-    }
+  @PostMapping
+  @PreAuthorize("hasAnyRole('ROLE_PHYSICIAN', 'ROLE_PATIENT')")
+  @Operation(
+      summary = "Creates a new setting",
+      description = "Creating a new setting for the authorized physician or patient")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "201", description = "Created setting successfully"),
+        @ApiResponse(responseCode = "403", description = "Not authorized for the action")
+      })
+  public ResponseEntity<ResultWithData<Object>> create(
+      @RequestBody @Valid CreateSettingRequest createSettingRequest,
+      @AuthenticationPrincipal UserDetails userDetails) {
+    var result =
+        ResultWithData.builder()
+            .message("Setting created successfully")
+            .data(service.create(userDetails.getUsername(), createSettingRequest))
+            .statusCode(201)
+            .build();
+    return ResponseEntity.ok(result);
+  }
 }
