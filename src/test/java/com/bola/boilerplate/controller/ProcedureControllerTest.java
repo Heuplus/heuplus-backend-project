@@ -6,7 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bola.boilerplate.config.SpringSecurityUserProvider;
+import com.bola.boilerplate.dto.PhysicianDto;
 import com.bola.boilerplate.dto.ProcedureDto;
+import com.bola.boilerplate.exception.exceptions.MandatoryArgumentMissingException;
 import com.bola.boilerplate.models.User;
 import com.bola.boilerplate.payload.request.CreateProcedureRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
@@ -15,15 +17,21 @@ import com.bola.boilerplate.service.abstracts.PhysicianManager;
 import com.bola.boilerplate.service.abstracts.ProcedureManager;
 import com.bola.boilerplate.service.abstracts.UserManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -204,5 +212,67 @@ class ProcedureControllerTest {
         .andExpect(jsonPath("$.statusCode").value(404))
         .andExpect(jsonPath("$.message").value("Not Found"))
         .andExpect(jsonPath("$.data.error").value("Not Found"));
+  }
+
+  @Test
+  @WithMockUser(roles = "PHYSICIAN")
+  void shouldPassListWithPhysician() throws Exception {
+    var randomUUID = UUID.randomUUID();
+    Mockito.when(procedureManager.getPhysiciansProcedures(Mockito.any(UUID.class), Mockito.any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.of()));
+    mockMvc
+            .perform(get("/api/v1/procedures?page=0&size=5&physicianId=" + randomUUID).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(200))
+            .andExpect(jsonPath("$.message").value("Got procedures successfully"));
+  }
+
+  @Test
+  @WithMockUser(roles = "PATIENT")
+  void shouldPassListWithPatient() throws Exception {
+    var randomUUID = UUID.randomUUID();
+    Mockito.when(procedureManager.getPhysiciansProcedures(Mockito.any(UUID.class), Mockito.any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.of()));
+    mockMvc
+            .perform(get("/api/v1/procedures?page=0&size=5&physicianId=" + randomUUID).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(200))
+            .andExpect(jsonPath("$.message").value("Got procedures successfully"));
+  }
+
+  @Test
+  @WithMockUser(roles = "USER")
+  void shouldFailListWithUser() throws Exception {
+    var randomUUID = UUID.randomUUID();
+    mockMvc
+            .perform(get("/api/v1/procedures?page=0&size=5&physicianId=" + randomUUID).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(403))
+            .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+            .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
+  }
+
+  @Test
+  void shouldFailListWithoutAuthentication() throws Exception {
+    var randomUUID = UUID.randomUUID();
+    mockMvc
+            .perform(get("/api/v1/procedures?page=0&size=5&physicianId=" + randomUUID).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(401))
+            .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+            .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
+  }
+
+  @Test
+  @WithMockUser(roles = "PHYSICIAN")
+  void shouldFailListWithoutPhysicianIdArgument() throws Exception {
+    Mockito.when(procedureManager.getPhysiciansProcedures(Mockito.any(UUID.class), Mockito.any(Pageable.class)))
+            .thenThrow(new MandatoryArgumentMissingException("physicianId field cannot be blank"));
+    mockMvc
+            .perform(get("/api/v1/procedures?page=0&size=5&physicianId=").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.statusCode").value(400))
+            .andExpect(jsonPath("$.message").value("Missing mandatory parameter physicianId"))
+            .andExpect(jsonPath("$.data.error").value("Missing mandatory parameter physicianId"));
   }
 }

@@ -1,6 +1,7 @@
 package com.bola.boilerplate.service.concretes;
 
 import com.bola.boilerplate.dto.ProcedureDto;
+import com.bola.boilerplate.exception.exceptions.MandatoryArgumentMissingException;
 import com.bola.boilerplate.models.Physician;
 import com.bola.boilerplate.models.Procedure;
 import com.bola.boilerplate.models.User;
@@ -15,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +58,7 @@ public class ProcedureService implements ProcedureManager {
   @Override
   public Page<ProcedureDto> getPhysiciansProcedures(UUID physicianId, Pageable pageable) {
     if(physicianId == null) {
-      return null;
+      throw new MandatoryArgumentMissingException("physicianId field cannot be blank");
     }
     return repository.findProceduresByPhysicianId(physicianId, pageable).map(procedure -> ProcedureDto.builder()
             .procedureId(procedure.getId())
