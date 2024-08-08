@@ -18,7 +18,7 @@ public class EncryptionUtil {
   // and should not be shared with anyone.
   // We will switch to the AWS KMS service to manage the keys in the future.
   // This key is used to encrypt and decrypt the data.
-  private final String key = "882BFCBF6921A882BFCBF6921A882B"; // 32 bytes for AES-256
+  private final String key = "882BFCBF6921A882"; // 16 bytes for AES-256
   private final String algorithm = "AES/GCM/NoPadding";
   private final int GCM_IV_LENGTH = 12; // Recommended length for GCM IV
   private final int GCM_TAG_LENGTH = 128; // Length of authentication tag in bits
