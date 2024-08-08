@@ -70,24 +70,28 @@ public class ProcedureController {
             .build();
     return ResponseEntity.ok(result);
   }
+
   /*
     Gets procedures of a physician
   */
   @GetMapping
   @PreAuthorize("hasAnyRole('ROLE_PHYSICIAN', 'ROLE_PATIENT')")
-  @Operation(summary = "Listing procedures of a physician", description = "Listing procedures of a physician")
+  @Operation(
+      summary = "Listing procedures of a physician",
+      description = "Listing procedures of a physician")
   @ApiResponses(
-          value = {
-                  @ApiResponse(responseCode = "200", description = "Got procedures successfully"),
-                  @ApiResponse(responseCode = "403", description = "Not authorized for the action")
-          })
-  public ResponseEntity<ResultWithData<Object>> list(@RequestParam UUID physicianId, Pageable pageable) {
+      value = {
+        @ApiResponse(responseCode = "200", description = "Got procedures successfully"),
+        @ApiResponse(responseCode = "403", description = "Not authorized for the action")
+      })
+  public ResponseEntity<ResultWithData<Object>> list(
+      @RequestParam UUID physicianId, Pageable pageable) {
     var result =
-            ResultWithData.builder()
-                    .message("Got procedures successfully")
-                    .data(service.getPhysiciansProcedures(physicianId, pageable))
-                    .statusCode(200)
-                    .build();
+        ResultWithData.builder()
+            .message("Got procedures successfully")
+            .data(service.getPhysiciansProcedures(physicianId, pageable))
+            .statusCode(200)
+            .build();
     return ResponseEntity.ok(result);
   }
 }

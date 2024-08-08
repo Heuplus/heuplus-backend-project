@@ -57,15 +57,19 @@ public class ProcedureService implements ProcedureManager {
   */
   @Override
   public Page<ProcedureDto> getPhysiciansProcedures(UUID physicianId, Pageable pageable) {
-    if(physicianId == null) {
+    if (physicianId == null) {
       throw new MandatoryArgumentMissingException("physicianId field cannot be blank");
     }
-    return repository.findProceduresByPhysicianId(physicianId, pageable).map(procedure -> ProcedureDto.builder()
-            .procedureId(procedure.getId())
-            .createdAt(procedure.getCreatedAt())
-            .name(procedure.getName())
-            .price(procedure.getPrice())
-            .updatedAt(procedure.getUpdatedAt())
-            .build());
+    return repository
+        .findProceduresByPhysicianId(physicianId, pageable)
+        .map(
+            procedure ->
+                ProcedureDto.builder()
+                    .procedureId(procedure.getId())
+                    .createdAt(procedure.getCreatedAt())
+                    .name(procedure.getName())
+                    .price(procedure.getPrice())
+                    .updatedAt(procedure.getUpdatedAt())
+                    .build());
   }
 }
