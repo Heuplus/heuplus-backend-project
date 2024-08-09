@@ -22,6 +22,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -54,6 +56,8 @@ public class SettingControllerTest {
     private SettingDto settingDto;
     private UUID randomUuid;
 
+    private List<SettingDto> settingDtoList;
+
     @BeforeEach
     void setUp() {
         createSettingRequest = CreateSettingRequest.builder()
@@ -66,6 +70,8 @@ public class SettingControllerTest {
                 .key("appointment_buffer_time")
                 .value("60")
                 .build();
+        settingDtoList = new ArrayList<>();
+        settingDtoList.add(settingDto);
     }
 
     @Test
@@ -228,5 +234,58 @@ public class SettingControllerTest {
                 .andExpect(jsonPath("$.statusCode").value(404))
                 .andExpect(jsonPath("$.message").value("Not Found"))
                 .andExpect(jsonPath("$.data.error").value("Not Found"));
+    }
+
+    @Test
+    @WithMockUser(roles = "PHYSICIAN")
+    void shouldPassListWithPhysician() throws Exception {
+        Mockito.when(settingManager.list(Mockito.any(String.class))).thenReturn(settingDtoList);
+        mockMvc
+                .perform(
+                        get("/api/v1/settings")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.message").value("Got settings successfully"))
+                .andExpect(jsonPath("$.data").isArray());
+    }
+
+    @Test
+    @WithMockUser(roles = "PATIENT")
+    void shouldPassListWithPatient() throws Exception {
+        Mockito.when(settingManager.list(Mockito.any(String.class))).thenReturn(settingDtoList);
+        mockMvc
+                .perform(
+                        get("/api/v1/settings")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.message").value("Got settings successfully"))
+                .andExpect(jsonPath("$.data").isArray());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void shouldFailListWithUserRole() throws Exception {
+        mockMvc
+                .perform(
+                        get("/api/v1/settings")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(403))
+                .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+                .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
+    }
+
+    @Test
+    void shouldFailListWithoutAuthentication() throws Exception {
+        mockMvc
+                .perform(
+                        get("/api/v1/settings")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(401))
+                .andExpect(jsonPath("$.message").value("Not authorized for the action"))
+                .andExpect(jsonPath("$.data.error").value("Not authorized for the action"));
     }
 }

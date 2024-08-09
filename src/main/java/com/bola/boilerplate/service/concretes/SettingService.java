@@ -11,6 +11,7 @@ import com.bola.boilerplate.service.abstracts.UserManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -45,5 +46,14 @@ public class SettingService implements SettingManager {
   public SettingDto details(String email, UUID settingId) {
     User user = userManager.findUserByEmail(email);
     return repository.findSettingDtoByIdAndUser(settingId, user.getId()).orElseThrow();
+  }
+
+  /*
+     Handle getting a list of setting from database
+  */
+  @Override
+  public List<SettingDto> list(String email) {
+    User user = userManager.findUserByEmail(email);
+    return repository.findSettingsDtoByUser(user.getId());
   }
 }

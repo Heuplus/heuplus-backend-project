@@ -71,4 +71,25 @@ public class SettingController {
                     .build();
     return ResponseEntity.ok(result);
   }
+
+  /*
+   Gets a list of settings from database with its details
+  */
+  @GetMapping
+  @PreAuthorize("hasAnyRole('ROLE_PHYSICIAN', 'ROLE_PATIENT')")
+  @Operation(summary = "Getting a list of settings", description = "Getting a list of settings with it's details")
+  @ApiResponses(
+          value = {
+                  @ApiResponse(responseCode = "200", description = "Got settings successfully"),
+                  @ApiResponse(responseCode = "403", description = "Not authorized for the action")
+          })
+  public ResponseEntity<ResultWithData<Object>> list(@AuthenticationPrincipal UserDetails userDetails) {
+    var result =
+            ResultWithData.builder()
+                    .message("Got settings successfully")
+                    .data(service.list(userDetails.getUsername()))
+                    .statusCode(200)
+                    .build();
+    return ResponseEntity.ok(result);
+  }
 }
