@@ -1,6 +1,7 @@
 package com.bola.boilerplate.controller;
 
 import com.bola.boilerplate.config.SpringSecurityUserProvider;
+import com.bola.boilerplate.dto.SettingDto;
 import com.bola.boilerplate.models.User;
 import com.bola.boilerplate.payload.request.CreateSettingRequest;
 import com.bola.boilerplate.payload.response.CreateResponse;
@@ -21,7 +22,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.NoSuchElementException;
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,10 +51,18 @@ public class SettingControllerTest {
     private User user;
 
     private CreateSettingRequest createSettingRequest;
+    private SettingDto settingDto;
+    private UUID randomUuid;
 
     @BeforeEach
     void setUp() {
         createSettingRequest = CreateSettingRequest.builder()
+                .key("appointment_buffer_time")
+                .value("60")
+                .build();
+        randomUuid = UUID.randomUUID();
+        settingDto = SettingDto.builder()
+                .settingId(randomUuid)
                 .key("appointment_buffer_time")
                 .value("60")
                 .build();
@@ -146,5 +159,74 @@ public class SettingControllerTest {
                 .andExpect(jsonPath("$.statusCode").value(400))
                 .andExpect(jsonPath("$.data.value").value("Value field cannot be blank"))
                 .andExpect(jsonPath("$.message").value("Value field cannot be blank\n"));
+    }
+
+    @Test
+    @WithMockUser(roles = "PHYSICIAN")
+    void shouldPassDetailsWithPhysician() throws Exception {
+        Mockito.when(settingManager.details(Mockito.any(String.class), Mockito.any(UUID.class))).thenReturn(settingDto);
+        mockMvc
+                .perform(
+                        get("/api/v1/settings/" + randomUuid)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.message").value("Got setting successfully"))
+                .andExpect(jsonPath("$.data.settingId").value(randomUuid.toString()))
+                .andExpect(jsonPath("$.data.key").value(settingDto.getKey()))
+                .andExpect(jsonPath("$.data.value").value(settingDto.getValue()));
+    }
+
+    @Test
+    @WithMockUser(roles = "PATIENT")
+    void shouldPassDetailsWithPatient() throws Exception {
+        Mockito.when(settingManager.details(Mockito.any(String.class), Mockito.any(UUID.class))).thenReturn(settingDto);
+        mockMvc
+                .perform(
+                        get("/api/v1/settings/" + randomUuid)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.message").value("Got setting successfully"))
+                .andExpect(jsonPath("$.data.settingId").value(randomUuid.toString()))
+                .andExpect(jsonPath("$.data.key").value(settingDto.getKey()))
+                .andExpect(jsonPath("$.data.value").value(settingDto.getValue()));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void shouldFailDetailsWithUserRole() throws Exception {
+        mockMvc
+                .perform(
+                        get("/api/v1/settings/" + randomUuid)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(403))
+                .andExpect(jsonPath("$.message").value("Not authorized for the action"));
+    }
+
+    @Test
+    void shouldFailDetailsWithoutAuthentication() throws Exception {
+        mockMvc
+                .perform(
+                        get("/api/v1/settings/" + randomUuid)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(401))
+                .andExpect(jsonPath("$.message").value("Not authorized for the action"));
+    }
+
+    @Test
+    @WithMockUser(roles = "PHYSICIAN")
+    void shouldFailDetailsWithNotFound() throws Exception {
+        Mockito.when(settingManager.details(Mockito.any(String.class), Mockito.any(UUID.class))).thenThrow(new NoSuchElementException());
+        mockMvc
+                .perform(
+                        get("/api/v1/settings/" + randomUuid)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(404))
+                .andExpect(jsonPath("$.message").value("Not Found"))
+                .andExpect(jsonPath("$.data.error").value("Not Found"));
     }
 }

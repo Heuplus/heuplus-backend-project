@@ -65,7 +65,7 @@ public class SettingController {
   public ResponseEntity<ResultWithData<Object>> details(@PathVariable UUID settingId, @AuthenticationPrincipal UserDetails userDetails) {
     var result =
             ResultWithData.builder()
-                    .message("Got procedure successfully")
+                    .message("Got setting successfully")
                     .data(service.details(userDetails.getUsername(), settingId))
                     .statusCode(200)
                     .build();
