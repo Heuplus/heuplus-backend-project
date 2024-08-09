@@ -12,10 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/settings")
@@ -48,6 +47,28 @@ public class SettingController {
             .data(service.create(userDetails.getUsername(), createSettingRequest))
             .statusCode(201)
             .build();
+    return ResponseEntity.ok(result);
+  }
+
+  /*
+   Gets a setting from database with its details
+  */
+  @GetMapping("/{settingId}")
+  @PreAuthorize("hasAnyRole('ROLE_PHYSICIAN', 'ROLE_PATIENT')")
+  @Operation(summary = "Getting a setting", description = "Getting a setting with it's details")
+  @ApiResponses(
+          value = {
+                  @ApiResponse(responseCode = "200", description = "Got setting successfully"),
+                  @ApiResponse(responseCode = "403", description = "Not authorized for the action"),
+                  @ApiResponse(responseCode = "404", description = "Setting not found")
+          })
+  public ResponseEntity<ResultWithData<Object>> details(@PathVariable UUID settingId, @AuthenticationPrincipal UserDetails userDetails) {
+    var result =
+            ResultWithData.builder()
+                    .message("Got procedure successfully")
+                    .data(service.details(userDetails.getUsername(), settingId))
+                    .statusCode(200)
+                    .build();
     return ResponseEntity.ok(result);
   }
 }
