@@ -1,24 +1,38 @@
 package com.bola.boilerplate.configuration;
 
+import com.bola.boilerplate.security.CustomAccessDeniedHandler;
+import com.bola.boilerplate.security.CustomAuthenticationEntryPoint;
 import com.bola.boilerplate.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/*
+ Adding custom Security related configuration to application
+*/
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
   private final JwtAuthenticationFilter jwtAuthFilter;
   private final AuthenticationProvider authenticationProvider;
 
+  private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+  private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
+  /*
+   Building the SecurityFilterChain
+  */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf()
@@ -28,6 +42,10 @@ public class SecurityConfiguration {
         .permitAll()
         .anyRequest()
         .authenticated()
+        .and()
+        .exceptionHandling()
+        .authenticationEntryPoint(customAuthenticationEntryPoint)
+        .accessDeniedHandler(customAccessDeniedHandler)
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

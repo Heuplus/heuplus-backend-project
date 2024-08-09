@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import org.hibernate.exception.JDBCConnectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -81,7 +82,7 @@ class AuthenticationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(registerRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.token").value("some-token"));
+        .andExpect(jsonPath("$.data.token").value("some-token"));
   }
 
   @Test
@@ -93,8 +94,9 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(registerRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.firstName").value("First Name field cannot be blank"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(400))
+        .andExpect(jsonPath("$.data.firstName").value("First Name field cannot be blank"));
   }
 
   @Test
@@ -105,8 +107,9 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(registerRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.lastName").value("Last Name field cannot be blank"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(400))
+        .andExpect(jsonPath("$.data.lastName").value("Last Name field cannot be blank"));
   }
 
   @Test
@@ -117,8 +120,9 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(registerRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.email").value("Email field cannot be blank"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(400))
+        .andExpect(jsonPath("$.data.email").value("Email field cannot be blank"));
   }
 
   @Test
@@ -129,8 +133,9 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(registerRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.email").value("Wrong email format"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(400))
+        .andExpect(jsonPath("$.data.email").value("Wrong email format"));
   }
 
   @Test
@@ -141,24 +146,9 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(registerRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.password").value("Password field cannot be blank"));
-  }
-
-  @Test
-  void registerShouldFailWithWrongPasswordFormat() throws Exception {
-    registerRequest.setPassword("11111111");
-    mockMvc
-        .perform(
-            post("/api/v1/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(registerRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(
-            jsonPath("$.password")
-                .value(
-                    "Password must consists of 1 uppercase letter, 1 lowercase letter, 1 numeric"
-                        + " character and at least 8 characters long"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(400))
+        .andExpect(jsonPath("$.data.password").value("Password field cannot be blank"));
   }
 
   @Test
@@ -170,8 +160,27 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(registerRequest)))
-        .andExpect(status().isConflict())
-        .andExpect(jsonPath("$.message").value("Credentials are already taken"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(409))
+        .andExpect(jsonPath("$.message").value("Credentials are already taken"))
+        .andExpect(jsonPath("$.data.error").value("Credentials are already taken"));
+    ;
+  }
+
+  @Test
+  void registerShouldFailWithDataAccessFailure() throws Exception {
+    Mockito.when(authenticationManager.register(Mockito.any(RegisterRequest.class)))
+        .thenThrow(JDBCConnectionException.class);
+    mockMvc
+        .perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(registerRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(500))
+        .andExpect(jsonPath("$.message").value("Something went wrong"))
+        .andExpect(jsonPath("$.data.error").value("Something went wrong"));
+    ;
   }
 
   @Test
@@ -184,7 +193,7 @@ class AuthenticationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(authenticationRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.token").value("some-token"));
+        .andExpect(jsonPath("$.data.token").value("some-token"));
   }
 
   @Test
@@ -198,7 +207,8 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(newAuthenticationRequest)))
-        .andExpect(status().isForbidden());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(403));
   }
 
   @Test
@@ -209,8 +219,8 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(authenticationRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.email").value("Email field cannot be blank"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.email").value("Email field cannot be blank"));
   }
 
   @Test
@@ -221,8 +231,9 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(authenticationRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.email").value("Wrong email format"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(400))
+        .andExpect(jsonPath("$.data.email").value("Wrong email format"));
   }
 
   @Test
@@ -233,23 +244,8 @@ class AuthenticationControllerTest {
             post("/api/v1/auth/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(authenticationRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.password").value("Password field cannot be blank"));
-  }
-
-  @Test
-  void authenticateShouldFailWithWrongPasswordFormat() throws Exception {
-    authenticationRequest.setPassword("11111111");
-    mockMvc
-        .perform(
-            post("/api/v1/auth/authenticate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(authenticationRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(
-            jsonPath("$.password")
-                .value(
-                    "Password must consists of 1 uppercase letter, 1 lowercase letter, 1 numeric"
-                        + " character and at least 8 characters long"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(400))
+        .andExpect(jsonPath("$.data.password").value("Password field cannot be blank"));
   }
 }

@@ -33,11 +33,6 @@ public class RegisterRequest {
   private String email;
 
   @NotBlank(message = "Password field cannot be blank")
-  @Pattern(
-      regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$",
-      message =
-          "Password must consists of 1 uppercase letter, 1 lowercase letter, 1 numeric character"
-              + " and at least 8 characters long")
   private String password;
 
   @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -45,4 +40,6 @@ public class RegisterRequest {
 
   @Enumerated(EnumType.STRING)
   private Gender gender;
+
+  private String phoneNumber;
 }

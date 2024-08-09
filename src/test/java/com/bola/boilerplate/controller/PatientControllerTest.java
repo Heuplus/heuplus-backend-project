@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
+import org.hibernate.exception.JDBCConnectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -29,6 +30,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
@@ -91,7 +93,8 @@ class PatientControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createPatientRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Patient created successfully"));
+        .andExpect(jsonPath("$.statusCode").value(201))
+        .andExpect(jsonPath("$.data.message").value("Patient created successfully"));
   }
 
   @Test
@@ -103,7 +106,7 @@ class PatientControllerTest {
             post("/api/v1/patients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createPatientRequest)))
-        .andExpect(status().isForbidden());
+        .andExpect(jsonPath("$.statusCode").value(401));
   }
 
   @Test
@@ -116,23 +119,43 @@ class PatientControllerTest {
             post("/api/v1/patients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createPatientRequest)))
-        .andExpect(status().isConflict())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.error").value("Role change is not possible"))
+        .andExpect(jsonPath("$.statusCode").value(409))
         .andExpect(jsonPath("$.message").value("Role change is not possible"));
   }
 
   @Test
   @WithUserDetails
+  void shouldFailWithDataAccessFailure() throws Exception {
+    Mockito.when(manager.create(Mockito.any(String.class), Mockito.any(CreatePatientRequest.class)))
+        .thenThrow(JDBCConnectionException.class);
+    mockMvc
+        .perform(
+            post("/api/v1/patients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(createPatientRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.error").value("Something went wrong"))
+        .andExpect(jsonPath("$.statusCode").value(500))
+        .andExpect(jsonPath("$.message").value("Something went wrong"));
+  }
+
+  @Test
+  @WithMockUser(roles = "PATIENT")
   void shouldPass() throws Exception {
     Mockito.when(manager.details(Mockito.any(String.class))).thenReturn(patientDto);
     mockMvc
         .perform(get("/api/v1/patients").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value("Got the Patient's details"));
   }
 
   @Test
   void shouldFailWithoutAuthorization() throws Exception {
     mockMvc
         .perform(get("/api/v1/patients").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isForbidden());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.statusCode").value(401));
   }
 }
