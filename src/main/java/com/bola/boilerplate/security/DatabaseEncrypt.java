@@ -12,7 +12,8 @@ public class DatabaseEncrypt implements AttributeConverter<String, String> {
   @Autowired EncryptionUtil encryptionUtil;
 
   /**
-    * This method is used to encrypt the data before saving it to the database.
+   * This method is used to encrypt the data before saving it to the database.
+   *
    * @param s - The data to be encrypted.
    * @return The encrypted data.
    */
@@ -23,6 +24,7 @@ public class DatabaseEncrypt implements AttributeConverter<String, String> {
 
   /**
    * This method is used to decrypt the data before fetching it from the database.
+   *
    * @param s - The data to be decrypted.
    * @return The decrypted data.
    */
