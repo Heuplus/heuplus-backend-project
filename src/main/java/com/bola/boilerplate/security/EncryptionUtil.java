@@ -26,7 +26,7 @@ public class EncryptionUtil {
   /**
    * Encrypt the given value.
    *
-   * @param value The value to be encrypted.
+   * @param value - The value to be encrypted.
    * @return The encrypted value.
    */
   public String encrypt(String value) {
@@ -56,7 +56,7 @@ public class EncryptionUtil {
   /**
    * Decrypt the given encrypted value.
    *
-   * @param encrypted The encrypted value to be decrypted.
+   * @param encrypted - The encrypted value to be decrypted.
    * @return The decrypted value.
    */
   public String decrypt(String encrypted) {
