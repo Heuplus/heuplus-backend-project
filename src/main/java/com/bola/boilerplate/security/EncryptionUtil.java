@@ -23,6 +23,12 @@ public class EncryptionUtil {
   private final int GCM_IV_LENGTH = 12; // Recommended length for GCM IV
   private final int GCM_TAG_LENGTH = 128; // Length of authentication tag in bits
 
+  /**
+   * Encrypt the given value.
+   *
+   * @param value The value to be encrypted.
+   * @return The encrypted value.
+   */
   public String encrypt(String value) {
     try {
       byte[] iv = new byte[GCM_IV_LENGTH];
@@ -47,6 +53,12 @@ public class EncryptionUtil {
     return null;
   }
 
+  /**
+   * Decrypt the given encrypted value.
+   *
+   * @param encrypted The encrypted value to be decrypted.
+   * @return The decrypted value.
+   */
   public String decrypt(String encrypted) {
     try {
       byte[] encryptedWithIv = Base64.decodeBase64(encrypted);
