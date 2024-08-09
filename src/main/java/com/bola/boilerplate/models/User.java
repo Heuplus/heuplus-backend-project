@@ -1,5 +1,6 @@
 package com.bola.boilerplate.models;
 
+import com.bola.boilerplate.security.DatabaseEncrypt;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -28,6 +29,7 @@ public class User implements UserDetails {
   private UUID id;
 
   @Column(unique = true)
+  @Convert(converter = DatabaseEncrypt.class)
   private String email;
 
   private String password;
