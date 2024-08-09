@@ -248,5 +248,4 @@ class AuthenticationControllerTest {
         .andExpect(jsonPath("$.statusCode").value(400))
         .andExpect(jsonPath("$.data.password").value("Password field cannot be blank"));
   }
-
 }
