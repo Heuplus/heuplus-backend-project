@@ -28,6 +28,7 @@ public class PhysicianController {
 
   /**
    * Converts a USER account to PHYSICIAN
+   *
    * @param userDetails - AuthenticationPrincipal
    * @param createPhysicianRequest - CreatePhysicianRequest
    * @return ResponseEntity<ResultWithData<Object>>
@@ -61,6 +62,7 @@ public class PhysicianController {
 
   /**
    * Gets a Physician's details
+   *
    * @param physicianId - UUID
    * @param userDetails - AuthenticationPrincipal
    * @return ResponseEntity<ResultWithData<Object>>
@@ -83,8 +85,12 @@ public class PhysicianController {
   public ResponseEntity<ResultWithData<Object>> details(
       @PathVariable(name = "physicianId", required = false) UUID physicianId,
       @AuthenticationPrincipal UserDetails userDetails) {
-    var result = ResultWithData.builder()
-            .data(physicianId == null ? service.getPhysicianDetails(userDetails.getUsername()) : service.getPhysicianDetails(physicianId))
+    var result =
+        ResultWithData.builder()
+            .data(
+                physicianId == null
+                    ? service.getPhysicianDetails(userDetails.getUsername())
+                    : service.getPhysicianDetails(physicianId))
             .message("Got the physician's details")
             .statusCode(200)
             .build();
@@ -93,6 +99,7 @@ public class PhysicianController {
 
   /**
    * Gets a list of physicians
+   *
    * @param pageable - Pageable
    * @return ResponseEntity<ResultWithData<Object>>
    */

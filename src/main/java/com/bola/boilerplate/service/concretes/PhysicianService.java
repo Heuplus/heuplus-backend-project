@@ -104,20 +104,23 @@ public class PhysicianService implements PhysicianManager {
   */
   @Override
   public Page<PhysicianDto> listPhysicians(Pageable pageable) {
-    return repository.findAll(pageable).map(entity -> {
-      var userDetails = entity.getUser().getUserOtherDetails();
-      return PhysicianDto.builder()
-              .physicianId(entity.getId())
-              .specialization(entity.getSpecialization())
-              .profilePhotoUrl(userDetails.getProfilePhotoUrl())
-              .educationRecord(entity.getEducationRecord())
-              .previousExperience(entity.getPreviousExperience())
-              .qualifications(entity.getQualifications())
-              .description(entity.getDescription())
-              .firstName(userDetails.getFirstName())
-              .lastName(userDetails.getLastName())
-              .build();
-    });
+    return repository
+        .findAll(pageable)
+        .map(
+            entity -> {
+              var userDetails = entity.getUser().getUserOtherDetails();
+              return PhysicianDto.builder()
+                  .physicianId(entity.getId())
+                  .specialization(entity.getSpecialization())
+                  .profilePhotoUrl(userDetails.getProfilePhotoUrl())
+                  .educationRecord(entity.getEducationRecord())
+                  .previousExperience(entity.getPreviousExperience())
+                  .qualifications(entity.getQualifications())
+                  .description(entity.getDescription())
+                  .firstName(userDetails.getFirstName())
+                  .lastName(userDetails.getLastName())
+                  .build();
+            });
   }
 
   /*
