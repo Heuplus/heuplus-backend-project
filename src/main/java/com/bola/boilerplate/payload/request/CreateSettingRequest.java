@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
     Dto for creating a new setting requests
 */
 public class CreateSettingRequest {
-  @NotBlank private String key;
-  @NotBlank private String value;
+  @NotBlank(message = "Key field cannot be blank")
+  private String key;
+  @NotBlank(message = "Value field cannot be blank")
+  private String value;
 }
