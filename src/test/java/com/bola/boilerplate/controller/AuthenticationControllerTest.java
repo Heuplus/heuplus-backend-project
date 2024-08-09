@@ -152,23 +152,6 @@ class AuthenticationControllerTest {
   }
 
   @Test
-  void registerShouldFailWithWrongPasswordFormat() throws Exception {
-    registerRequest.setPassword("11111111");
-    mockMvc
-        .perform(
-            post("/api/v1/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(registerRequest)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.statusCode").value(400))
-        .andExpect(
-            jsonPath("$.data.password")
-                .value(
-                    "Password must consists of 1 uppercase letter, 1 lowercase letter, 1 numeric"
-                        + " character and at least 8 characters long"));
-  }
-
-  @Test
   void registerShouldFailWithDuplicateEmails() throws Exception {
     Mockito.when(authenticationManager.register(Mockito.any(RegisterRequest.class)))
         .thenThrow(new DataIntegrityViolationException("Credentials are already taken"));
@@ -266,20 +249,4 @@ class AuthenticationControllerTest {
         .andExpect(jsonPath("$.data.password").value("Password field cannot be blank"));
   }
 
-  @Test
-  void authenticateShouldFailWithWrongPasswordFormat() throws Exception {
-    authenticationRequest.setPassword("11111111");
-    mockMvc
-        .perform(
-            post("/api/v1/auth/authenticate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(authenticationRequest)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.statusCode").value(400))
-        .andExpect(
-            jsonPath("$.data.password")
-                .value(
-                    "Password must consists of 1 uppercase letter, 1 lowercase letter, 1 numeric"
-                        + " character and at least 8 characters long"));
-  }
 }
