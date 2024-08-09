@@ -26,9 +26,12 @@ import org.springframework.web.bind.annotation.*;
 public class PhysicianController {
   private final PhysicianManager service;
 
-  /*
-      Converts a USER account to PHYSICIAN
-  */
+  /**
+   * Converts a USER account to PHYSICIAN
+   * @param userDetails - AuthenticationPrincipal
+   * @param createPhysicianRequest - CreatePhysicianRequest
+   * @return ResponseEntity<ResultWithData<Object>>
+   */
   @PostMapping
   @Operation(
       summary = "Converts a USER account to PHYSICIAN",
@@ -56,9 +59,12 @@ public class PhysicianController {
     return ResponseEntity.ok(result);
   }
 
-  /*
-      Gets a Physician's details
-  */
+  /**
+   * Gets a Physician's details
+   * @param physicianId - UUID
+   * @param userDetails - AuthenticationPrincipal
+   * @return ResponseEntity<ResultWithData<Object>>
+   */
   @GetMapping(value = {"/{physicianId}", "/"})
   @PreAuthorize("hasAnyRole('ROLE_PATIENT', 'ROLE_PHYSICIAN')")
   @Operation(
@@ -77,28 +83,19 @@ public class PhysicianController {
   public ResponseEntity<ResultWithData<Object>> details(
       @PathVariable(name = "physicianId", required = false) UUID physicianId,
       @AuthenticationPrincipal UserDetails userDetails) {
-    if (physicianId == null) {
-      var result =
-          ResultWithData.builder()
-              .data(service.getPhysicianDetails(userDetails.getUsername()))
-              .message("Got the physician's details")
-              .statusCode(200)
-              .build();
-      return ResponseEntity.ok(result);
-    }
-
-    var result =
-        ResultWithData.builder()
-            .data(service.getPhysicianDetails(physicianId))
+    var result = ResultWithData.builder()
+            .data(physicianId == null ? service.getPhysicianDetails(userDetails.getUsername()) : service.getPhysicianDetails(physicianId))
             .message("Got the physician's details")
             .statusCode(200)
             .build();
     return ResponseEntity.ok(result);
   }
 
-  /*
-      Gets a list of physicians
-  */
+  /**
+   * Gets a list of physicians
+   * @param pageable - Pageable
+   * @return ResponseEntity<ResultWithData<Object>>
+   */
   @Operation(
       summary = "Gets a list of physicians",
       description = "Gets the list of physicians with pagination")
