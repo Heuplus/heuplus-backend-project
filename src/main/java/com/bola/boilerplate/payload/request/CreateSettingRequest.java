@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class CreateSettingRequest {
   @NotBlank(message = "Key field cannot be blank")
   private String key;
+
   @NotBlank(message = "Value field cannot be blank")
   private String value;
 }

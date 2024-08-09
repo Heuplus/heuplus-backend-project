@@ -8,11 +8,10 @@ import com.bola.boilerplate.payload.response.CreateResponse;
 import com.bola.boilerplate.repository.SettingRepository;
 import com.bola.boilerplate.service.abstracts.SettingManager;
 import com.bola.boilerplate.service.abstracts.UserManager;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
