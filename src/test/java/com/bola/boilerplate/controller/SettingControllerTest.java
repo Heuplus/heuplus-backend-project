@@ -38,7 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 /*
    Testing for ProcedureController
 */
-public class SettingControllerTest {
+class SettingControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @MockBean SettingRepository settingRepository;
